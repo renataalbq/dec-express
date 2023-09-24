@@ -5,7 +5,7 @@ const Sidebar = ()  => {
     const location = useLocation()
     return (
         <aside className="h-screen">
-            <nav className="h-full flex flex-col bg-black border-r shadow-sm">
+            <nav className="h-full flex flex-col bg-slate-800 border-r shadow-sm">
                 <div className="p-4 flex justify-between items-center bg-blue-800">
                     <h1 className="text-white">DecExpress</h1>
                 </div>
