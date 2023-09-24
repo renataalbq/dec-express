@@ -1,5 +1,5 @@
-import { Sidebar } from "./components/ui/sidebar";
-import { SidebarItem } from "./components/ui/sidebar-item";
+import { Sidebar } from "./components/sidebar";
+import { SidebarItem } from "./components/sidebar-item";
 
 export function App() {
   return (
