@@ -1,13 +1,18 @@
+import { Sidebar } from "@/components/sidebar";
 
 export function RegisterStudent() {
 
   return (
-    <form onSubmit={() => {}} className="space-y-6">
+    <main className="flex-1 flex gap-6">
+      <Sidebar />
+   
+      <form onSubmit={() => {}} className="space-y-6">
 
-      <div className="space-y-2">
+        <div className="space-y-2">
 
-      </div>
+        </div>
 
-    </form>
+      </form>
+    </main>
   );
 }
