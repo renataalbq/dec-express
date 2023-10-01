@@ -8,7 +8,7 @@ interface CardClassProps {
 
 
 const CardClass = (props: CardClassProps) => (
-    <div className="bg-white rounded shadow-md p-6">
+    <div className="bg-white rounded shadow-md p-4 sm:flex sm:flex-col">
       <div className="flex justify-between">
         <div>
           <CardItem label="Série" value={props.turma.serie} />

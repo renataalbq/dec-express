@@ -1,12 +1,12 @@
 import { Layout } from "@/components/layout";
 
-export function ListStudents() {
+export function ListDocuments() {
 
   return (
     <Layout>
-      <div>
-        
-      </div>
+        <div>
+            
+        </div>
     </Layout>
   );
 }
