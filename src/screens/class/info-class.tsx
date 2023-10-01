@@ -1,11 +1,10 @@
-import { Header } from "@/components/header/header";
-import { Sidebar } from "@/components/sidebar/sidebar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaTrashCan } from "react-icons/fa6";
 import { BiSearch } from "react-icons/bi";
 import { Pagination } from "@/components/pagination/pagination";
 import { useState } from "react";
 import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
+import { Layout } from "@/components/layout";
 
 export function InfoClass() {
     const navigate = useNavigate();
@@ -31,13 +30,7 @@ export function InfoClass() {
   
 
   return (
-    <>
-      <Sidebar />
-      <div className="flex-1">
-        <Header />
-        <div className="p-2 space-y-4">
-        <div className="ml-4 p-8">
-
+    <Layout>
           <div className="flex justify-between">
             <div>
             <h1 className="text-2xl font-semibold">Turma: {turma.serie} {turma.turma} - {turma.nivel}</h1>
@@ -102,9 +95,6 @@ export function InfoClass() {
 
             <Pagination current={1} total={5} />
           </div>
-        </div>
-        </div>
-      </div>
-    </>
+    </Layout>
   );
 }
