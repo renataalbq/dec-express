@@ -1,4 +1,5 @@
-import { Sidebar } from "@/components/sidebar";
+import { Header } from "@/components/header/header";
+import { Sidebar } from "@/components/sidebar/sidebar";
 import { useState } from "react";
 
 export function RegisterClass() {
@@ -6,8 +7,7 @@ export function RegisterClass() {
     ano: '',
     serie: '',
     nivel: '',
-    disciplina: '',
-    professor: '',
+    turma: '',
   });
 
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
@@ -19,10 +19,13 @@ export function RegisterClass() {
   };
 
   return (
-    <main className="flex-1 flex gap-6">
+    <>
       <Sidebar />
-      <div className="p-4 space-y-4">
-        <div className="flex justify-between">
+      <div className="flex-1">
+      <Header />
+      <div className="p-2 space-y-4">
+        <div className="ml-4 p-8">
+        <div className="flex justify-between mb-4">
           <h1 className="text-2xl font-semibold">Cadastrar nova turma</h1>
           <button
             onClick={() => {}}
@@ -31,85 +34,73 @@ export function RegisterClass() {
             Salvar turma
           </button>
         </div>
-   
-      <form className="space-y-4">
-      <div className="flex space-x-4">
-        <div>
-          <label htmlFor="ano" className="block font-semibold">Ano:</label>
-          <input
-            type="text"
-            id="ano"
-            name="ano"
-            value={formData.ano}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-          />
+      <div className="bg-white p-6 shadow-md">
+        <form className="space-y-4">
+        <div className="flex space-x-4">
+          <div className="w-1/2">
+            <label htmlFor="ano" className="block font-semibold">Ano:</label>
+            <input
+              type="text"
+              id="ano"
+              name="ano"
+              value={formData.ano}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+              placeholder="Ex: 2023"
+              required
+            />
+          </div>
+          <div className="w-1/2">
+            <label htmlFor="serie" className="block font-semibold">Série:</label>
+            <input
+              type="text"
+              id="serie"
+              name="serie"
+              value={formData.serie}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+              placeholder="Ex: 5º"
+              required
+            />
+          </div>
+        </div>
+        <div className="flex space-x-4">
+        <div className="w-1/2">
+            <label htmlFor="turma" className="block font-semibold">Turma:</label>
+            <input
+              type="text"
+              id="turma"
+              name="turma"
+              value={formData.turma}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+              placeholder="Ex: A"
+            />
+          </div>
+          <div className="w-1/2">
+            <label htmlFor="nivel" className="block font-semibold">Nível:</label>
+            <select
+              id="nivel"
+              name="nivel"
+              value={formData.nivel}
+              onChange={handleInputChange}
+              className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+            >
+              <option value="">Selecionar nível</option>
+              <option value="fundamental1">Ensino Fundamental I</option>
+              <option value="fundamental2">Ensino Fundamental II</option>
+              <option value="medio">Ensino Médio</option>
+            </select>
+          </div>
         </div>
         <div>
-          <label htmlFor="serie" className="block font-semibold">Série:</label>
-          <input
-            type="text"
-            id="serie"
-            name="serie"
-            value={formData.serie}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-          />
+        
         </div>
-        <div>
-          <label htmlFor="nivel" className="block font-semibold">Nível:</label>
-          <input
-            type="text"
-            id="nivel"
-            name="nivel"
-            value={formData.nivel}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-          />
-        </div>
-      </div>
-      <div className="flex space-x-4">
-        <div>
-          <label htmlFor="disciplina" className="block font-semibold">Disciplina:</label>
-          <select
-            id="disciplina"
-            name="disciplina"
-            value={formData.disciplina}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-          >
-            <option value="">Selecione uma disciplina</option>
-            <option value="matematica">Matemática</option>
-            <option value="portugues">Português</option>
-            <option value="historia">História</option>
-          </select>
-        </div>
-        <div>
-          <label htmlFor="professor" className="block font-semibold">Professor:</label>
-          <select
-            id="professor"
-            name="professor"
-            value={formData.professor}
-            onChange={handleInputChange}
-            className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-          >
-            <option value="">Selecione um professor</option>
-            <option value="joao">João</option>
-            <option value="maria">Maria</option>
-            <option value="carlos">Carlos</option>
-          </select>
-        </div>
-      </div>
-      <div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded focus:outline-none"
-        >
-          Adicionar disciplina
-        </button>
-      </div>
-    </form>
+      </form>
     </div>
-    </main>
+    </div>
+    </div>
+    </div>
+    </>
   );
 }
