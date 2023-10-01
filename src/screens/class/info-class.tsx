@@ -4,15 +4,26 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaTrashCan } from "react-icons/fa6";
 import { BiSearch } from "react-icons/bi";
 import { Pagination } from "@/components/pagination/pagination";
+import { useState } from "react";
+import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
 
 export function InfoClass() {
     const navigate = useNavigate();
     const location = useLocation();
     const { turma } = location.state;
-    
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const handleEditClass = () => {
-		  navigate('/');
+		  navigate('/register-class');
 	  };
+
+    const handleDeleteConfirmation = () => {
+      setIsModalOpen(false); 
+    }
+
+    const handleCancelDelete = () => {
+      setIsModalOpen(false);
+    };
 
     if (!turma) {
       return <div>Turma não encontrada</div>;
@@ -36,9 +47,17 @@ export function InfoClass() {
               <button onClick={handleEditClass} className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500">
                 Editar Turma
               </button>
-              <button className="bg-gradient-to-r from-red-500 to-red-800 text-white px-2 rounded hover:from-red-800 hover:to-red-500">
+              <button onClick={() => setIsModalOpen(true)} className="bg-gradient-to-r from-red-500 to-red-800 text-white px-2 rounded hover:from-red-800 hover:to-red-500">
                 <FaTrashCan />
               </button>
+              {isModalOpen && (
+                <ConfirmationModal
+                  onConfirmDelete={handleDeleteConfirmation}
+                  onCancel={handleCancelDelete}
+                  entityName={"a turma"}
+                  text={`${turma.serie} ${turma.turma} - ${turma.nivel}`}
+                />
+              )}
             </div>
           </div>
           <hr className="mt-4" />

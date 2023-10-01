@@ -1,8 +1,10 @@
 import { Header } from "@/components/header/header";
 import { Sidebar } from "@/components/sidebar/sidebar";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function RegisterClass() {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     ano: '',
     serie: '',
@@ -18,6 +20,10 @@ export function RegisterClass() {
     });
   };
 
+  const handleSaveClass = () => {
+    navigate('/list-class');
+  };
+
   return (
     <>
       <Sidebar />
@@ -28,7 +34,7 @@ export function RegisterClass() {
         <div className="flex justify-between mb-4">
           <h1 className="text-2xl font-semibold">Cadastrar nova turma</h1>
           <button
-            onClick={() => {}}
+            onClick={handleSaveClass}
             className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 py-2 rounded hover:from-blue-800 hover:to-blue-500"
           >
             Salvar turma
