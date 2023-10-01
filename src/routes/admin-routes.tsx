@@ -1,3 +1,4 @@
+import { InfoClass } from "@/screens/class/info-class";
 import { ListClass } from "@/screens/class/list-class";
 import { RegisterClass } from "@/screens/class/register-class";
 import { Home } from "@/screens/home/home";
@@ -20,6 +21,10 @@ export const AdminRoutes = createBrowserRouter([
   {
     path: "/register-class",
     element: <RegisterClass />,
+  },
+  {
+    path: "/info-class/:turmaId",
+    element: <InfoClass />,
   },
   {
     path: "*",
