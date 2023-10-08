@@ -1,3 +1,5 @@
+import { Login } from "@/screens/auth/login";
+import { SignUp } from "@/screens/auth/signup";
 import { InfoClass } from "@/screens/class/info-class";
 import { ListClass } from "@/screens/class/list-class";
 import { RegisterClass } from "@/screens/class/register-class";
@@ -9,7 +11,7 @@ import { createBrowserRouter } from "react-router-dom";
 
 export const AdminRoutes = createBrowserRouter([
   {
-    path: "/",
+    path: "/home",
     element: <Home />,
   },
   {
@@ -37,7 +39,15 @@ export const AdminRoutes = createBrowserRouter([
     element: <ListStudents />,
   },
   {
-    path: "*",
-    element: <Home />,
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
+  },
+  {
+    path: "/",
+    element: <Login />,
   },
 ]);
