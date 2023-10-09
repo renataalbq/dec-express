@@ -1,7 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaTrashCan } from "react-icons/fa6";
-import { BiSearch } from "react-icons/bi";
-import { Pagination } from "@/components/pagination/pagination";
 import { useState } from "react";
 import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
 import { Layout } from "@/components/layout";

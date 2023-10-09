@@ -16,7 +16,7 @@ const CardStudent = (props: CardStudentProps) => (
                 <CardItem label="Matrícula" value={props.aluno.matricula} />
             </div>
             <div>
-                <CardItem label="turma" value={props.aluno.turma} />
+                <CardItem label="turma" value={props.aluno.codTurma} />
             </div>
             <div className="mt-2">
                 <button
