@@ -8,6 +8,7 @@ import { Home } from "@/screens/home/home";
 import { ListStudents } from "@/screens/students/list-students";
 import { RegisterStudent } from "@/screens/students/register-student";
 import { createBrowserRouter } from "react-router-dom";
+import {DetailStudents} from "@/screens/students/detail-students.tsx";
 
 export const AdminRoutes = createBrowserRouter([
   {
@@ -15,8 +16,16 @@ export const AdminRoutes = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/register-students",
+    path: "/list-students",
+    element: <ListStudents />,
+  },
+  {
+    path: "/register-student",
     element: <RegisterStudent />,
+  },
+  {
+    path: "/detail-students/:alunoId",
+    element: <DetailStudents />,
   },
   {
     path: "/list-class",
