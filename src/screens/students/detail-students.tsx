@@ -34,11 +34,8 @@ export function DetailStudents() {
             <div className="flex justify-between">
                 <div>
                     <h1 className="text-2xl font-semibold">Aluno: {aluno.nome} </h1>
-                    <p className="text-sm text-neutral-500">
-                        Informações do Aluno: {aluno.nome} {aluno.matricula} - {aluno.turma}
-                    </p>
                 </div>
-                <div className="flex gap-6 mb-4">
+                <div className="flex gap-6">
                     <button
                         onClick={handleEditClass}
                         className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500"
@@ -65,19 +62,8 @@ export function DetailStudents() {
 
             <div className="bg-white shadow p-4 mt-4">
                 <div className="flex justify-between items-center">
-                    <h2 className="text-lg font-semibold">Detalhes do Aluno</h2>
-                    <div className="relative">
-                        <input
-                            type="text"
-                            className="bg-gray-200 text-gray-800 border rounded-md pl-4 pr-8 w-96 py-2"
-                            placeholder="Buscar aluno (nome, matrícula ou CPF)"
-                        />
-                        <span className="absolute top-1/2 right-2 transform -translate-y-1/2">
-              <BiSearch />
-            </span>
+                    <h2 className="text-lg font-semibold">Informações do Aluno</h2>
                     </div>
-                </div>
-
                 <table className="w-full mt-6">
                     <thead className="bg-black text-white">
                     <tr>
@@ -102,8 +88,6 @@ export function DetailStudents() {
                     </tr>
                     </tbody>
                 </table>
-
-                <Pagination current={1} total={5} />
             </div>
         </Layout>
     );
