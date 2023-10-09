@@ -51,7 +51,7 @@ export function DetailStudents() {
                             onConfirmDelete={handleDeleteConfirmation}
                             onCancel={handleCancelDelete}
                             entityName={"o aluno"}
-                            text={`${aluno.nome} ${aluno.matricula} - ${aluno.turma}`}
+                            text={`${aluno.nome} ${aluno.matricula} - ${aluno.codTurma}`}
                         />
                     )}
                 </div>
@@ -78,11 +78,11 @@ export function DetailStudents() {
                     <tr>
                         <td className="py-2 px-4">{aluno.nome}</td>
                         <td className="py-2 px-4">{aluno.dataNascimento}</td>
-                        <td className="py-2 px-4">{aluno.endereco}</td>
+                        <td className="py-2 px-4">{aluno.endereco.logradouro} - {aluno.endereco.municipio}/{aluno.endereco.uf}</td>
                         <td className="py-2 px-4">{aluno.telefone}</td>
                         <td className="py-2 px-4">{aluno.email}</td>
                         <td className="py-2 px-4">{aluno.matricula}</td>
-                        <td className="py-2 px-4">{aluno.turma}</td>
+                        <td className="py-2 px-4">{aluno.codTurma}</td>
                     </tr>
                     </tbody>
                 </table>
