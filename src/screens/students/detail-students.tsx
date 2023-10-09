@@ -1,0 +1,110 @@
+import { useLocation, useNavigate } from "react-router-dom";
+import { FaTrashCan } from "react-icons/fa6";
+import { BiSearch } from "react-icons/bi";
+import { Pagination } from "@/components/pagination/pagination";
+import { useState } from "react";
+import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
+import { Layout } from "@/components/layout";
+
+export function DetailStudents() {
+    const navigate = useNavigate();
+    const location = useLocation();
+    const { aluno } = location.state;
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleEditClass = () => {
+        navigate('/register-student');
+    };
+
+    const handleDeleteConfirmation = () => {
+        setIsModalOpen(false);
+    }
+
+    const handleCancelDelete = () => {
+        setIsModalOpen(false);
+    };
+
+    if (!aluno) {
+        return <div>Aluno não encontrado</div>;
+    }
+
+
+    return (
+        <Layout>
+            <div className="flex justify-between">
+                <div>
+                    <h1 className="text-2xl font-semibold">Aluno: {aluno.nome} </h1>
+                    <p className="text-sm text-neutral-500">
+                        Informações do Aluno: {aluno.nome} {aluno.matricula} - {aluno.turma}
+                    </p>
+                </div>
+                <div className="flex gap-6 mb-4">
+                    <button
+                        onClick={handleEditClass}
+                        className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500"
+                    >
+                        Editar Aluno
+                    </button>
+                    <button
+                        onClick={() => setIsModalOpen(true)}
+                        className="bg-gradient-to-r from-red-500 to-red-800 text-white px-2 rounded hover:from-red-800 hover:to-red-500"
+                    >
+                        <FaTrashCan />
+                    </button>
+                    {isModalOpen && (
+                        <ConfirmationModal
+                            onConfirmDelete={handleDeleteConfirmation}
+                            onCancel={handleCancelDelete}
+                            entityName={"o aluno"}
+                            text={`${aluno.nome} ${aluno.matricula} - ${aluno.turma}`}
+                        />
+                    )}
+                </div>
+            </div>
+            <hr className="mt-4" />
+
+            <div className="bg-white shadow p-4 mt-4">
+                <div className="flex justify-between items-center">
+                    <h2 className="text-lg font-semibold">Detalhes do Aluno</h2>
+                    <div className="relative">
+                        <input
+                            type="text"
+                            className="bg-gray-200 text-gray-800 border rounded-md pl-4 pr-8 w-96 py-2"
+                            placeholder="Buscar aluno (nome, matrícula ou CPF)"
+                        />
+                        <span className="absolute top-1/2 right-2 transform -translate-y-1/2">
+              <BiSearch />
+            </span>
+                    </div>
+                </div>
+
+                <table className="w-full mt-6">
+                    <thead className="bg-black text-white">
+                    <tr>
+                        <th className="py-2 px-4">Nome</th>
+                        <th className="py-2 px-4">Data de nascimento</th>
+                        <th className="py-2 px-4">Endereço</th>
+                        <th className="py-2 px-4">Telefone</th>
+                        <th className="py-2 px-4">Email</th>
+                        <th className="py-2 px-4">Matrícula</th>
+                        <th className="py-2 px-4">Turma</th>
+                    </tr>
+                    </thead>
+                    <tbody className="bg-gray-500 text-white text-center">
+                    <tr>
+                        <td className="py-2 px-4">{aluno.nome}</td>
+                        <td className="py-2 px-4">{aluno.dataNascimento}</td>
+                        <td className="py-2 px-4">{aluno.endereco}</td>
+                        <td className="py-2 px-4">{aluno.telefone}</td>
+                        <td className="py-2 px-4">{aluno.email}</td>
+                        <td className="py-2 px-4">{aluno.matricula}</td>
+                        <td className="py-2 px-4">{aluno.turma}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <Pagination current={1} total={5} />
+            </div>
+        </Layout>
+    );
+}
