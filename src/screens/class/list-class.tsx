@@ -1,48 +1,15 @@
 import { CardClass } from "@/components/card-class/card-class";
 import { Layout } from "@/components/layout";
 import { Pagination } from "@/components/pagination/pagination";
+import useGetAllClasses from "@/hooks/use-get-classes";
+import { ITurma } from "@/model/ITurma";
+import { Key } from "react";
 import { useNavigate } from "react-router-dom";
 
-const turmas = [
-  {
-    id: 1,
-    serie: "1º Ano",
-    turma: "A",
-    nivel: "Ensino Fundamental I",
-    ano: 2023,
-  },
-  {
-    id: 2,
-    serie: "1º Ano",
-    turma: "B",
-    nivel: "Ensino Fundamental I",
-    ano: 2023,
-  },
-  {
-    id: 3,
-    serie: "2º Ano",
-    turma: " ",
-    nivel: "Ensino Fundamental I",
-    ano: 2023,
-  },
-  {
-    id: 4,
-    serie: "3º Ano",
-    turma: " ",
-    nivel: "Ensino Fundamental I",
-    ano: 2023,
-  },
-  {
-    id: 5,
-    serie: "4º Ano",
-    turma: " ",
-    nivel: "Ensino Fundamental I",
-    ano: 2023,
-  },
-];
 
 export function ListClass() {
   const navigate = useNavigate();
+  const { classes, isLoading, error } = useGetAllClasses();
 
   const handleCreateClass = () => {
     navigate("/register-class");
@@ -71,13 +38,19 @@ export function ListClass() {
       </div>
 
       <div className="mt-6 space-y-4">
-        {turmas.map((turma, index) => (
-          <CardClass
-            key={index}
-            turma={turma}
-            handleInfoClass={handleInfoClass}
-          />
-        ))}
+      {isLoading ? (
+          <p>Loading...</p>
+        ) : error ? (
+          <p>Error: {error}</p>
+        ) : (
+          classes?.map((turma: ITurma, index: Key | null | undefined) => (
+            <CardClass
+              key={index}
+              turma={turma}
+              handleInfoClass={handleInfoClass}
+            />
+          ))
+        )}
         <Pagination current={1} total={3} />
       </div>
     </Layout>

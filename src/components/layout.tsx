@@ -9,13 +9,13 @@ interface LayoutProps {
 const Layout = (props: LayoutProps) => (
     <>
         <Sidebar />
-        <div className="flex-1">
+        <div className="w-full ml-56 bg-slate-50">
             <Header />
-            <div className="p-2 space-y-4">
+            <div className="p-2 overflow-y-auto">
                 <div className="ml-4 p-8">{props.children}</div>
             </div>
         </div>
     </>
-);
+);  
   
   export { Layout };

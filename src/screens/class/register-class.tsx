@@ -1,12 +1,16 @@
 import { Layout } from "@/components/layout";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import useCreateClass from "@/hooks/use-create-class";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function RegisterClass() {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { turma } = location.state;
+  const { createClass, isLoading, error } = useCreateClass(); 
   const [formData, setFormData] = useState({
-    ano: "",
-    serie: "",
+    ano: 0,
+    serie: 0,
     nivel: "",
     turma: "",
   });
@@ -19,19 +23,38 @@ export function RegisterClass() {
     });
   };
 
-  const handleSaveClass = () => {
-    navigate("/list-class");
+  const handleSaveClass = async () => {
+    await createClass(formData);
+    if (!error) {
+      navigate('/list-class');
+    }
   };
+
+  const isUpdateMode = !!turma.codTurma;
+
+  useEffect(() => {
+    if (isUpdateMode) {
+      fetch(`http://localhost:8080/decexpress/turma/${turma.codTurma}`)
+        .then((response) => response.json())
+        .then((data) => {
+          setFormData(data);
+        })
+        .catch((error) => {
+          console.log(error.message)
+        });
+    }
+  }, [turma.codTurma, isUpdateMode]);
 
   return (
     <Layout>
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-semibold">Cadastrar nova turma</h1>
+        <h1 className="text-2xl font-semibold">{isUpdateMode ? 'Atualizar turma' : 'Cadastrar nova turma'}</h1>
         <button
           onClick={handleSaveClass}
+          type="submit" disabled={isLoading}
           className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 py-2 rounded hover:from-blue-800 hover:to-blue-500"
         >
-          Salvar turma
+          {isLoading ? 'Carregando...' : 'Salvar turma'}
         </button>
       </div>
       <div className="bg-white p-6 shadow-md">
@@ -95,13 +118,12 @@ export function RegisterClass() {
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
               >
                 <option value="">Selecionar nível</option>
-                <option value="fundamental1">Ensino Fundamental I</option>
-                <option value="fundamental2">Ensino Fundamental II</option>
-                <option value="medio">Ensino Médio</option>
+                <option value="ENSINO_FUNDAMENTAL_I">Ensino Fundamental I</option>
+                <option value="ENSINO_FUNDAMENTAL_II">Ensino Fundamental II</option>
+                <option value="ENSINO_MEDIO">Ensino Médio</option>
               </select>
             </div>
           </div>
-          <div></div>
         </form>
       </div>
     </Layout>

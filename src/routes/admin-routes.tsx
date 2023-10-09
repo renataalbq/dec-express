@@ -36,6 +36,10 @@ export const AdminRoutes = createBrowserRouter([
     element: <RegisterClass />,
   },
   {
+    path: "/register-class/:turmaId",
+    element: <RegisterClass />,
+  },
+  {
     path: "/info-class/:turmaId",
     element: <InfoClass />,
   },

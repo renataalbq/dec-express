@@ -5,19 +5,26 @@ import { Pagination } from "@/components/pagination/pagination";
 import { useState } from "react";
 import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
 import { Layout } from "@/components/layout";
+import { nivel_format } from "@/utils/nivel-formatter";
+import useDeleteClass from "@/hooks/use-delete-class";
 
 export function InfoClass() {
     const navigate = useNavigate();
     const location = useLocation();
     const { turma } = location.state;
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleEditClass = () => {
-		  navigate('/register-class');
+    const { deleteClass, error } = useDeleteClass();
+    
+    const handleEditClass = (turma: any) => {
+		  navigate(`/register-class/${turma.codTurma}`, { state: { turma }});
 	  };
 
-    const handleDeleteConfirmation = () => {
-      setIsModalOpen(false); 
+    const handleDeleteConfirmation = async () => {
+      await deleteClass(turma.codTurma);
+      setIsModalOpen(false);
+      if (!error) {
+        navigate('/list-class');
+      }
     }
 
     const handleCancelDelete = () => {
@@ -33,11 +40,11 @@ export function InfoClass() {
     <Layout>
           <div className="flex justify-between">
             <div>
-            <h1 className="text-2xl font-semibold">Turma: {turma.serie} {turma.turma} - {turma.nivel}</h1>
-            <p className="text-sm text-neutral-500">Informações da turma: {turma.serie} {turma.turma} - {turma.nivel} ({turma.ano})</p>
+            <h1 className="text-2xl font-semibold">Turma: {turma.serie}º Ano {turma.turma} - {nivel_format(turma.nivel)}</h1>
+            <p className="text-sm text-neutral-500">Informações da turma: {turma.serie}º Ano {turma.turma} - {nivel_format(turma.nivel)} ({turma.ano})</p>
             </div>
             <div className="flex gap-6 mb-4">
-              <button onClick={handleEditClass} className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500">
+              <button onClick={() => handleEditClass(turma)} className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500">
                 Editar Turma
               </button>
               <button onClick={() => setIsModalOpen(true)} className="bg-gradient-to-r from-red-500 to-red-800 text-white px-2 rounded hover:from-red-800 hover:to-red-500">
@@ -48,7 +55,7 @@ export function InfoClass() {
                   onConfirmDelete={handleDeleteConfirmation}
                   onCancel={handleCancelDelete}
                   entityName={"a turma"}
-                  text={`${turma.serie} ${turma.turma} - ${turma.nivel}`}
+                  text={`${turma.serie}º Ano ${turma.turma} - ${nivel_format(turma.nivel)}`}
                 />
               )}
             </div>
