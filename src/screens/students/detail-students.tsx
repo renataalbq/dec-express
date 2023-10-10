@@ -5,88 +5,120 @@ import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirm
 import { Layout } from "@/components/layout";
 
 export function DetailStudents() {
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { aluno } = location.state;
-    const [isModalOpen, setIsModalOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { aluno } = location.state;
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
-    const handleEditClass = () => {
-        navigate('/register-student');
-    };
+  const handleEditClass = () => {
+    navigate("/register-student");
+  };
 
-    const handleDeleteConfirmation = () => {
-        setIsModalOpen(false);
-    }
+  const handleDeleteConfirmation = () => {
+    setIsModalOpen(false);
+  };
 
-    const handleCancelDelete = () => {
-        setIsModalOpen(false);
-    };
+  const handleCancelDelete = () => {
+    setIsModalOpen(false);
+  };
 
-    if (!aluno) {
-        return <div>Aluno não encontrado</div>;
-    }
+  if (!aluno) {
+    return <div>Aluno não encontrado</div>;
+  }
 
+  return (
+    <Layout>
+      <div className="flex justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">Aluno: {aluno.nome} </h1>
+        </div>
+        <div className="flex gap-6">
+          <button
+            onClick={handleEditClass}
+            className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500"
+          >
+            Editar Aluno
+          </button>
+          <button
+            onClick={() => setIsModalOpen(true)}
+            className="bg-gradient-to-r from-red-500 to-red-800 text-white px-2 rounded hover:from-red-800 hover:to-red-500"
+          >
+            <FaTrashCan />
+          </button>
+          {isModalOpen && (
+            <ConfirmationModal
+              onConfirmDelete={handleDeleteConfirmation}
+              onCancel={handleCancelDelete}
+              entityName={"o aluno"}
+              text={`${aluno.nome} ${aluno.matricula} - ${aluno.codTurma}`}
+            />
+          )}
+        </div>
+      </div>
+      <hr className="mt-4" />
 
-    return (
-        <Layout>
-            <div className="flex justify-between">
-                <div>
-                    <h1 className="text-2xl font-semibold">Aluno: {aluno.nome} </h1>
-                </div>
-                <div className="flex gap-6">
-                    <button
-                        onClick={handleEditClass}
-                        className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500"
-                    >
-                        Editar Aluno
-                    </button>
-                    <button
-                        onClick={() => setIsModalOpen(true)}
-                        className="bg-gradient-to-r from-red-500 to-red-800 text-white px-2 rounded hover:from-red-800 hover:to-red-500"
-                    >
-                        <FaTrashCan />
-                    </button>
-                    {isModalOpen && (
-                        <ConfirmationModal
-                            onConfirmDelete={handleDeleteConfirmation}
-                            onCancel={handleCancelDelete}
-                            entityName={"o aluno"}
-                            text={`${aluno.nome} ${aluno.matricula} - ${aluno.codTurma}`}
-                        />
-                    )}
-                </div>
+      <div className="bg-white shadow p-4 mt-4">
+        <div>
+          <dl className="divide-y divide-gray-100">
+            <div className="px-4 pt-3 pb-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-900">
+                Nome
+              </dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {aluno.nome}
+              </dd>
             </div>
-            <hr className="mt-4" />
-
-            <div className="bg-white shadow p-4 mt-4">
-                <div className="flex justify-between items-center">
-                    <h2 className="text-lg font-semibold">Informações do Aluno</h2>
-                    </div>
-                <table className="w-full mt-6">
-                    <thead className="bg-black text-white">
-                    <tr>
-                        <th className="py-2 px-4">Nome</th>
-                        <th className="py-2 px-4">Data de nascimento</th>
-                        <th className="py-2 px-4">Endereço</th>
-                        <th className="py-2 px-4">Telefone</th>
-                        <th className="py-2 px-4">Email</th>
-                        <th className="py-2 px-4">Matrícula</th>
-                        <th className="py-2 px-4">Turma</th>
-                    </tr>
-                    </thead>
-                    <tbody className="bg-gray-500 text-white text-center">
-                    <tr>
-                        <td className="py-2 px-4">{aluno.nome}</td>
-                        <td className="py-2 px-4">{aluno.dataNascimento}</td>
-                        <td className="py-2 px-4">{aluno.endereco.logradouro} - {aluno.endereco.municipio}/{aluno.endereco.uf}</td>
-                        <td className="py-2 px-4">{aluno.telefone}</td>
-                        <td className="py-2 px-4">{aluno.email}</td>
-                        <td className="py-2 px-4">{aluno.matricula}</td>
-                        <td className="py-2 px-4">{aluno.codTurma}</td>
-                    </tr>
-                    </tbody>
-                </table>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-900">
+                Data de nascimento
+              </dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {aluno.dataNascimento}
+              </dd>
             </div>
-        </Layout>
-    );
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-900">
+                Matricula
+              </dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {aluno.matricula}
+              </dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-900">
+                Email
+              </dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {aluno.email}
+              </dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-900">
+                Telefone
+              </dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {aluno.telefone}
+              </dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-900">
+                Endereço
+              </dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {aluno.endereco.logradouro}, {aluno.endereco.bairro}, {aluno.endereco.numero} - {aluno.endereco.municipio}/{aluno.endereco.uf}
+              </dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-900">
+                Turma
+              </dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {aluno.codTurma}
+              </dd>
+            </div>
+          </dl>
+        </div>
+      </div>
+    </Layout>
+  );
 }

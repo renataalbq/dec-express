@@ -1,18 +1,30 @@
 import { Layout } from "@/components/layout";
+import useCreateStudent from "@/hooks/use-create-student";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 export function RegisterStudent() {
     const navigate = useNavigate();
+    const { createStudent, error } = useCreateStudent(); 
+
     const [formData, setFormData] = useState({
         nome: "",
         dataNascimento: "",
-        endereco: "",
+        cpf: "",
+        rg: "",
+        endereco: {
+            cep: 0,
+            logradouro: "",
+            bairro: "",
+            numero: "",
+            uf: "",
+            municipio: "",
+            complemento: ""
+        },
         telefone: "",
         email: "",
-        matricula: "",
-        turma: "",
-
+        matricula: 0,
+        codTurma: 0,
     });
 
     const handleInputChange = (e: { target: { name: any; value: any } }) => {
@@ -21,10 +33,14 @@ export function RegisterStudent() {
             ...formData,
             [name]: value,
         });
+        console.log(formData)
     };
 
-    const handleSaveStudents = () => {
-        navigate("/list-students");
+    const handleSaveStudents = async () => {
+        await createStudent(formData);
+        if (!error) {
+        navigate('/list-students');
+        }
     };
 
     return (
@@ -74,20 +90,38 @@ export function RegisterStudent() {
                     </div>
                     <div className="flex space-x-4">
                         <div className="w-1/2">
-                            <label htmlFor="endereco" className="block font-semibold">
-                                Endereço:
+                            <label htmlFor="cpf" className="block font-semibold">
+                                CPF:
                             </label>
                             <input
                                 type="text"
-                                id="endereco"
-                                name="endereco"
-                                value={formData.endereco}
+                                id="cpf"
+                                name="cpf"
+                                value={formData.cpf}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-                                placeholder="Endereco"
+                                placeholder="CPF"
                                 required
                             />
                         </div>
+                        <div className="w-1/2">
+                            <label htmlFor="rg" className="block font-semibold">
+                                RG:
+                            </label>
+                            <input
+                                type="text"
+                                id="rg"
+                                name="rg"
+                                value={formData.rg}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                                placeholder="RG"
+                                required
+                            />
+                        </div>
+                    </div>
+                    <div className="flex space-x-4">
+                        
                         <div className="w-1/2">
                             <label htmlFor="telefone" className="block font-semibold">
                                 Telefone:
@@ -121,6 +155,109 @@ export function RegisterStudent() {
                     <div className="flex space-x-4">
                         <div className="w-1/2">
                             <label htmlFor="matricula" className="block font-semibold">
+                                Logradouro:
+                            </label>
+                            <input
+                                type="text"
+                                id="logradouro"
+                                name="logradouro"
+                                value={formData.endereco.logradouro}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                                placeholder="Rua XXXXXX"
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <label htmlFor="numero" className="block font-semibold">
+                                Numero:
+                            </label>
+                            <input
+                                type="text"
+                                id="numero"
+                                name="numero"
+                                value={formData.endereco.numero}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                                placeholder="000"
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <label htmlFor="bairro" className="block font-semibold">
+                                Bairro:
+                            </label>
+                            <input
+                                type="text"
+                                id="bairro"
+                                name="bairro"
+                                value={formData.endereco.bairro}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                                placeholder="Bairro"
+                            />
+                        </div>
+                    </div>
+                    <div className="flex space-x-4">
+                        <div className="w-1/2">
+                            <label htmlFor="cep" className="block font-semibold">
+                                CEP:
+                            </label>
+                            <input
+                                type="text"
+                                id="cep"
+                                name="cep"
+                                value={formData.endereco.cep}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                                placeholder="00000-000"
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <label htmlFor="municipio" className="block font-semibold">
+                                Município:
+                            </label>
+                            <input
+                                type="text"
+                                id="municipio"
+                                name="municipio"
+                                value={formData.endereco.municipio}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                                placeholder="Município"
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <label htmlFor="uf" className="block font-semibold">
+                                UF:
+                            </label>
+                            <input
+                                type="text"
+                                id="uf"
+                                name="uf"
+                                value={formData.endereco.uf}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                                placeholder="UF"
+                            />
+                        </div>
+                        <div className="w-1/2">
+                            <label htmlFor="complemento" className="block font-semibold">
+                                Complemento:
+                            </label>
+                            <input
+                                type="text"
+                                id="complemento"
+                                name="complemento"
+                                value={formData.endereco.complemento}
+                                onChange={handleInputChange}
+                                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                                placeholder="Complemento"
+                            />
+                        </div>
+                    </div>
+                    
+                    <div className="flex space-x-4">
+                        <div className="w-1/2">
+                            <label htmlFor="matricula" className="block font-semibold">
                                 Matrícula:
                             </label>
                             <input
@@ -141,14 +278,14 @@ export function RegisterStudent() {
                                 type="text"
                                 id="turma"
                                 name="turma"
-                                value={formData.turma}
+                                value={formData.codTurma}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
                                 placeholder="Turma"
                             />
                         </div>
                     </div>
-                    <div></div>
+                    
                 </form>
             </div>
         </Layout>

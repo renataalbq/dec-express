@@ -1,5 +1,4 @@
 export type IAluno = {
-    cod_aluno: number;
     codTurma: number;
     nome: string;
     dataNascimento: string;
@@ -9,14 +8,13 @@ export type IAluno = {
     telefone: string;
     email: string;
     endereco: IEndereco;
-    stRegistro: number;
 }
 
 export type IEndereco = {
     cep: number;
     logradouro: string;
     bairro: string;
-    numero: number;
+    numero: string;
     uf: string;
     municipio: string;
     complemento: string;
