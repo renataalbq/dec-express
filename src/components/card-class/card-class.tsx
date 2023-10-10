@@ -10,17 +10,17 @@ interface CardClassProps {
 
 const CardClass = (props: CardClassProps) => (
     <div className="bg-white rounded shadow-md p-4 sm:flex sm:flex-col">
-      <div className="flex justify-between">
-        <div>
+      <div className="flex flex-wrap justify-between">
+        <div className="w-1/5">
           <CardItem label="Série" value={`${props.turma.serie}º ano`} />
         </div>
-        <div>
+        <div className="w-1/5">
           <CardItem label="Turma" value={props.turma.turma} />
         </div>
-        <div>
+        <div className="w-1/5">
           <CardItem label="Nível" value={nivel_format(props.turma.nivel)} />
         </div>
-        <div>
+        <div className="w-1/5">
           <CardItem label="Ano" value={props.turma.ano} />
         </div>
         <div className="mt-2">
