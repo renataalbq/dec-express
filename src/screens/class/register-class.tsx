@@ -1,12 +1,10 @@
 import { Layout } from "@/components/layout";
 import useCreateClass from "@/hooks/use-create-class";
-import { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export function RegisterClass() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const { turma } = location.state;
   const { createClass, isLoading, error } = useCreateClass(); 
   const [formData, setFormData] = useState({
     ano: 0,
@@ -30,25 +28,10 @@ export function RegisterClass() {
     }
   };
 
-  const isUpdateMode = !!turma.codTurma;
-
-  useEffect(() => {
-    if (isUpdateMode) {
-      fetch(`http://localhost:8080/decexpress/turma/${turma.codTurma}`)
-        .then((response) => response.json())
-        .then((data) => {
-          setFormData(data);
-        })
-        .catch((error) => {
-          console.log(error.message)
-        });
-    }
-  }, [turma.codTurma, isUpdateMode]);
-
   return (
     <Layout>
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-semibold">{isUpdateMode ? 'Atualizar turma' : 'Cadastrar nova turma'}</h1>
+        <h1 className="text-2xl font-semibold">Cadastrar nova turma</h1>
         <button
           onClick={handleSaveClass}
           type="submit" disabled={isLoading}
