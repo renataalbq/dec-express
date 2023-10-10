@@ -16,7 +16,10 @@ const CardStudent = (props: CardStudentProps) => (
                 <CardItem label="Matrícula" value={props.aluno.matricula} />
             </div>
             <div>
-                <CardItem label="turma" value={props.aluno.codTurma} />
+                <CardItem label="Email" value={props.aluno.email} />
+            </div>
+            <div>
+                <CardItem label="Turma" value={props.aluno.codTurma} />
             </div>
             <div className="mt-2">
                 <button
