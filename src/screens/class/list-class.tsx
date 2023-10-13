@@ -1,6 +1,8 @@
 import { CardClass } from "@/components/card-class/card-class";
 import { Layout } from "@/components/layout";
 import { Pagination } from "@/components/pagination/pagination";
+import ErrorPlaceholder from "@/components/placeholders/error";
+import LoadingPlaceholder from "@/components/placeholders/loading";
 import useGetAllClasses from "@/hooks/use-get-classes";
 import { ITurma } from "@/model/ITurma";
 import { Key, useEffect, useState } from "react";
@@ -57,9 +59,9 @@ export function ListClass() {
 
       <div className="mt-6 space-y-4">
       {isLoading ? (
-          <p>Loading...</p>
+          <LoadingPlaceholder />
         ) : error ? (
-          <p>Error: {error}</p>
+          <ErrorPlaceholder error={error} />
         ) : (
           displayedClasses?.map((turma: ITurma, index: Key | null | undefined) => (
             <CardClass

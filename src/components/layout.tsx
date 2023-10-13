@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { Header } from "./header/header";
+import Header from "./header/header";
 import { Sidebar } from "./sidebar/sidebar";
 
 interface LayoutProps {

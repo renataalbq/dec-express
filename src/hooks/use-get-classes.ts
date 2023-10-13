@@ -15,8 +15,8 @@ function useGetAllClasses() {
         setClasses(data);
         setIsLoading(false);
       })
-      .catch((error) => {
-        setError('Erro ao buscar turmas: ' + error.message);
+      .catch(() => {
+        setError('Ocorreu um erro ao buscar turmas');
         setIsLoading(false);
       });
   }, []);
