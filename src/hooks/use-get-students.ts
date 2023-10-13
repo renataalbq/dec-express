@@ -15,8 +15,8 @@ function useGetAllStudents() {
         setStudents(data);
         setIsLoading(false);
       })
-      .catch((error) => {
-        setError('Erro ao buscar alunos: ' + error.message);
+      .catch(() => {
+        setError('Ocorreu um erro ao buscar alunos');
         setIsLoading(false);
       });
   }, []);

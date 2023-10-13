@@ -1,6 +1,8 @@
 import { CardStudent } from "@/components/card-student/card-student";
 import { Layout } from "@/components/layout";
 import { Pagination } from "@/components/pagination/pagination";
+import ErrorPlaceholder from "@/components/placeholders/error";
+import LoadingPlaceholder from "@/components/placeholders/loading";
 import useGetAllStudents from "@/hooks/use-get-students";
 import { useNavigate } from "react-router-dom";
 
@@ -36,10 +38,10 @@ export function ListStudents() {
 
       <div className="mt-6 space-y-4">
         {isLoading ? (
-          <p>Loading...</p>
-        ) : error ? (
-          <p>Error: {error}</p>
-        ) : (
+         <LoadingPlaceholder />
+         ) : error ? (
+           <ErrorPlaceholder error={error} />
+         ) : (
           students?.map((aluno, index) => (
             <CardStudent
               key={index}
