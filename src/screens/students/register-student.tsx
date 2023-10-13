@@ -27,14 +27,25 @@ export function RegisterStudent() {
         codTurma: 0,
     });
 
-    const handleInputChange = (e: { target: { name: any; value: any } }) => {
+    const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
         const { name, value } = e.target;
-        setFormData({
+      
+        if (name.startsWith('endereco.')) {
+          const addressField = name.split('.')[1];
+          setFormData((prevState) => ({
+            ...prevState,
+            endereco: {
+              ...prevState.endereco,
+              [addressField]: value,
+            },
+          }));
+        } else {
+          setFormData({
             ...formData,
             [name]: value,
-        });
-        console.log(formData)
-    };
+          });
+        }
+      };
 
     const handleSaveStudents = async () => {
         await createStudent(formData);
@@ -154,13 +165,13 @@ export function RegisterStudent() {
                     </div>
                     <div className="flex space-x-4">
                         <div className="w-1/2">
-                            <label htmlFor="matricula" className="block font-semibold">
+                            <label htmlFor="logradouro" className="block font-semibold">
                                 Logradouro:
                             </label>
                             <input
                                 type="text"
                                 id="logradouro"
-                                name="logradouro"
+                                name="endereco.logradouro"
                                 value={formData.endereco.logradouro}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
@@ -174,7 +185,7 @@ export function RegisterStudent() {
                             <input
                                 type="text"
                                 id="numero"
-                                name="numero"
+                                name="endereco.numero"
                                 value={formData.endereco.numero}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
@@ -188,7 +199,7 @@ export function RegisterStudent() {
                             <input
                                 type="text"
                                 id="bairro"
-                                name="bairro"
+                                name="endereco.bairro"
                                 value={formData.endereco.bairro}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
@@ -204,7 +215,7 @@ export function RegisterStudent() {
                             <input
                                 type="text"
                                 id="cep"
-                                name="cep"
+                                name="endereco.cep"
                                 value={formData.endereco.cep}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
@@ -218,7 +229,7 @@ export function RegisterStudent() {
                             <input
                                 type="text"
                                 id="municipio"
-                                name="municipio"
+                                name="endereco.municipio"
                                 value={formData.endereco.municipio}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
@@ -232,7 +243,7 @@ export function RegisterStudent() {
                             <input
                                 type="text"
                                 id="uf"
-                                name="uf"
+                                name="endereco.uf"
                                 value={formData.endereco.uf}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
@@ -246,7 +257,7 @@ export function RegisterStudent() {
                             <input
                                 type="text"
                                 id="complemento"
-                                name="complemento"
+                                name="endereco.complemento"
                                 value={formData.endereco.complemento}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
@@ -271,13 +282,13 @@ export function RegisterStudent() {
                             />
                         </div>
                         <div className="w-1/2">
-                            <label htmlFor="turma" className="block font-semibold">
+                            <label htmlFor="codTurma" className="block font-semibold">
                                 Turma:
                             </label>
                             <input
                                 type="text"
-                                id="turma"
-                                name="turma"
+                                id="codTurma"
+                                name="codTurma"
                                 value={formData.codTurma}
                                 onChange={handleInputChange}
                                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"

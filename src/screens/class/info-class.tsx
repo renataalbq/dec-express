@@ -100,7 +100,7 @@ export function InfoClass() {
               </tbody>
             </table>
 
-            <Pagination current={1} total={5} />
+            <Pagination current={1} total={5} onPageChange={() => {}} />
           </div>
     </Layout>
   );

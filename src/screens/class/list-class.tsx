@@ -3,13 +3,16 @@ import { Layout } from "@/components/layout";
 import { Pagination } from "@/components/pagination/pagination";
 import useGetAllClasses from "@/hooks/use-get-classes";
 import { ITurma } from "@/model/ITurma";
-import { Key } from "react";
+import { Key, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
 export function ListClass() {
   const navigate = useNavigate();
   const { classes, isLoading, error } = useGetAllClasses();
+  const itemsPerPage = 6;
+  const [currentPage, setCurrentPage] = useState(1);
+  const [displayedClasses, setDisplayedClasses] = useState<ITurma[]>([]);
 
   const handleCreateClass = () => {
     navigate("/register-class");
@@ -17,6 +20,21 @@ export function ListClass() {
 
   const handleInfoClass = (turma: any) => {
     navigate(`/info-class/${turma.id}`, { state: { turma } });
+  };
+
+  useEffect(() => {
+    if (!isLoading && !error && classes) {
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+
+      const classesToDisplay = classes.slice(startIndex, endIndex);
+
+      setDisplayedClasses(classesToDisplay);
+    }
+  }, [classes, currentPage, isLoading, error]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
   return (
@@ -43,7 +61,7 @@ export function ListClass() {
         ) : error ? (
           <p>Error: {error}</p>
         ) : (
-          classes?.map((turma: ITurma, index: Key | null | undefined) => (
+          displayedClasses?.map((turma: ITurma, index: Key | null | undefined) => (
             <CardClass
               key={index}
               turma={turma}
@@ -51,7 +69,8 @@ export function ListClass() {
             />
           ))
         )}
-        <Pagination current={1} total={3} />
+        <Pagination current={currentPage} total={Math.ceil(classes ? classes.length / itemsPerPage : 3)} onPageChange={handlePageChange} />
+
       </div>
     </Layout>
   );

@@ -12,6 +12,8 @@ export function RegisterClass() {
     nivel: "",
     turma: "",
   });
+  const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
@@ -21,10 +23,16 @@ export function RegisterClass() {
     });
   };
 
-  const handleSaveClass = async () => {
-    await createClass(formData);
-    if (!error) {
-      navigate('/list-class');
+    const handleSaveClass = async () => {
+    if (!formData.ano || !formData.serie || !formData.turma || !formData.nivel) {
+      setErrorMessage("Preencha todos os campos obrigatórios.");
+    } else {
+      setErrorMessage(''); 
+      await createClass(formData);
+      if (!error) {
+        setSuccessMessage("Turma criada com sucesso");
+        navigate('/list-class');
+      }
     }
   };
 
@@ -41,11 +49,21 @@ export function RegisterClass() {
         </button>
       </div>
       <div className="bg-white p-6 shadow-md">
+      {successMessage && (
+          <div className="bg-green-200 text-green-800 p-2 mb-4 rounded">
+            {successMessage}
+          </div>
+        )}
+        {errorMessage && (
+          <div className="bg-red-200 text-red-800 p-2 mb-4 rounded">
+            {errorMessage}
+          </div>
+        )}
         <form className="space-y-4">
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label htmlFor="ano" className="block font-semibold">
-                Ano:
+                Ano: <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -60,7 +78,7 @@ export function RegisterClass() {
             </div>
             <div className="w-1/2">
               <label htmlFor="serie" className="block font-semibold">
-                Série:
+                Série: <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -77,7 +95,7 @@ export function RegisterClass() {
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label htmlFor="turma" className="block font-semibold">
-                Turma:
+                Turma: <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -91,7 +109,7 @@ export function RegisterClass() {
             </div>
             <div className="w-1/2">
               <label htmlFor="nivel" className="block font-semibold">
-                Nível:
+                Nível: <span className="text-red-500">*</span>
               </label>
               <select
                 id="nivel"

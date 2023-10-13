@@ -48,7 +48,7 @@ export function ListStudents() {
             />
           ))
         )}
-        <Pagination current={1} total={3} />
+        <Pagination current={1} total={3} onPageChange={() => {}} />
       </div>
     </Layout>
   );
