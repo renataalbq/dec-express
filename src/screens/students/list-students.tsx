@@ -62,7 +62,7 @@ export function ListStudents() {
          ) : error ? (
            <ErrorPlaceholder error={error} />
          ) : (
-          students?.map((aluno, index) => (
+          displayedStudents?.map((aluno, index) => (
             <CardStudent
               key={index}
               aluno={aluno}

@@ -31,7 +31,6 @@ export function RegisterClass() {
       setErrorMessage(''); 
       await createClass(formData);
       if (!error) {
-        
         setSuccessMessage("Turma criada com sucesso");
         setTimeout(() => {
           navigate('/list-class');

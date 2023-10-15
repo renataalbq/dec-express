@@ -1,4 +1,5 @@
 import { Layout } from "@/components/layout";
+import { AlertMessage } from "@/components/message/message";
 import useCreateStudent from "@/hooks/use-create-student";
 import { date_format } from "@/utils/date-formatter";
 import { useState } from "react";
@@ -26,7 +27,7 @@ export function RegisterStudent() {
     matricula: 0,
     codTurma: 0,
   });
-  console.log(formData);
+
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -55,15 +56,16 @@ export function RegisterStudent() {
   };
 
   const handleSaveStudents = async () => {
-    if (!formData.nome) {
+    if (!formData.nome || !formData.dataNascimento || formData.telefone || formData.email) {
       setErrorMessage("Preencha todos os campos obrigatórios.");
     } else {
       setErrorMessage("");
       await createStudent(formData);
-
       if (!error) {
         setSuccessMessage("Aluno criado com sucesso");
-        navigate("/list-students");
+        setTimeout(() => {
+          navigate('/list-students');
+        }, 1000);
       }
     }
   };
@@ -80,6 +82,12 @@ export function RegisterStudent() {
         </button>
       </div>
       <div className="bg-white p-6 shadow-md">
+        {successMessage && (
+          <AlertMessage type="success" message={successMessage} />
+        )}
+        {errorMessage && (
+          <AlertMessage type="error" message={errorMessage} />
+        )}
         <form className="space-y-4">
           <div className="flex space-x-4">
             <div className="w-1/2">
