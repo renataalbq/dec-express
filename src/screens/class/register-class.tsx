@@ -1,4 +1,5 @@
 import { Layout } from "@/components/layout";
+import { AlertMessage } from "@/components/message/message";
 import useCreateClass from "@/hooks/use-create-class";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -30,8 +31,11 @@ export function RegisterClass() {
       setErrorMessage(''); 
       await createClass(formData);
       if (!error) {
+        
         setSuccessMessage("Turma criada com sucesso");
-        navigate('/list-class');
+        setTimeout(() => {
+          navigate('/list-class');
+        }, 1000);
       }
     }
   };
@@ -50,14 +54,10 @@ export function RegisterClass() {
       </div>
       <div className="bg-white p-6 shadow-md">
       {successMessage && (
-          <div className="bg-green-200 text-green-800 p-2 mb-4 rounded">
-            {successMessage}
-          </div>
+          <AlertMessage type="success" message={successMessage} />
         )}
         {errorMessage && (
-          <div className="bg-red-200 text-red-800 p-2 mb-4 rounded">
-            {errorMessage}
-          </div>
+          <AlertMessage type="error" message={errorMessage} />
         )}
         <form className="space-y-4">
           <div className="flex space-x-4">
@@ -65,31 +65,39 @@ export function RegisterClass() {
               <label htmlFor="ano" className="block font-semibold">
                 Ano: <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
+              <select
                 id="ano"
                 name="ano"
                 value={formData.ano}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-                placeholder="Ex: 2023"
-                required
-              />
+              >
+                <option value="2023">2023</option>
+                <option value="2024">2024</option>
+                <option value="2025">2025</option>
+              </select>
             </div>
             <div className="w-1/2">
               <label htmlFor="serie" className="block font-semibold">
                 Série: <span className="text-red-500">*</span>
               </label>
-              <input
-                type="text"
+              <select
                 id="serie"
                 name="serie"
                 value={formData.serie}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-                placeholder="Ex: 5º"
-                required
-              />
+              >
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+                <option value="7">7</option>
+                <option value="8">8</option>
+                <option value="9">9</option>
+              </select>
             </div>
           </div>
           <div className="flex space-x-4">

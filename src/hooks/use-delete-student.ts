@@ -4,11 +4,11 @@ function useDeleteStudents() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const deleteStudents = async (cod_aluno: number) => {
+  const deleteStudents = async (matricula: string) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8080/decexpress/aluno/${cod_aluno}`, {
+      const response = await fetch(`http://localhost:8080/decexpress/aluno/${matricula}`, {
         method: 'DELETE',
       });
 

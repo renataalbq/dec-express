@@ -8,18 +8,18 @@ interface CardStudentProps {
 
 const CardStudent = (props: CardStudentProps) => (
     <div className="bg-white rounded shadow-md p-4 sm:flex sm:flex-col">
-        <div className="flex justify-between">
-            <div>
+        <div className="flex flex-wrap justify-between">
+            <div className="w-1/5">
                 <CardItem label="Nome" value={props.aluno.nome} />
             </div>
-            <div>
-                <CardItem label="Matrícula" value={props.aluno.matricula} />
+            <div className="w-1/5">
+                <CardItem label="Matrícula" value={props.aluno.matricula ? props.aluno.matricula : ''} />
             </div>
-            <div>
+            <div className="w-1/5">
                 <CardItem label="Email" value={props.aluno.email} />
             </div>
-            <div>
-                <CardItem label="Turma" value={props.aluno.codTurma} />
+            <div className="w-1/5">
+                <CardItem label="Turma" value={props.aluno.codTurma ? props.aluno.codTurma : ''} />
             </div>
             <div className="mt-2">
                 <button

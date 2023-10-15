@@ -31,11 +31,6 @@ export function InfoClass() {
       setIsModalOpen(false);
     };
 
-    if (!turma) {
-      return <div>Turma não encontrada</div>;
-    }
-  
-
   return (
     <Layout>
           <div className="flex justify-between">

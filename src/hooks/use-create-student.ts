@@ -19,11 +19,12 @@ function useCreateStudent() {
       });
 
       if (!response.ok) {
-        throw new Error('Erro ao criar aluno');
+        throw new Error(response.type);
       }
 
       setIsLoading(false);
     } catch (error) {
+      console.log(error)
       setError('Erro ao criar aluno');
       setIsLoading(false);
     }

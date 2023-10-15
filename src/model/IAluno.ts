@@ -1,13 +1,13 @@
 export type IAluno = {
-    codTurma: number;
+    codTurma: number | null;
     nome: string;
     dataNascimento: string;
-    cpf: string;
-    rg: string;
-    matricula: number;
+    cpf: string  | null;
+    rg: string  | null;
+    matricula: number  | null;
     telefone: string;
     email: string;
-    endereco: IEndereco;
+    endereco: IEndereco | null;
 }
 
 export type IEndereco = {

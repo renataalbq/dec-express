@@ -3,28 +3,30 @@ import { FaTrashCan } from "react-icons/fa6";
 import { useState } from "react";
 import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
 import { Layout } from "@/components/layout";
+import useDeleteStudents from "@/hooks/use-delete-student";
 
 export function DetailStudents() {
   const navigate = useNavigate();
   const location = useLocation();
   const { aluno } = location.state;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { deleteStudents, error } = useDeleteStudents();
 
   const handleEditClass = () => {
     navigate("/register-student");
   };
 
-  const handleDeleteConfirmation = () => {
+  const handleDeleteConfirmation = async () => {
+    await deleteStudents(aluno.matricula);
     setIsModalOpen(false);
-  };
+    if (!error) {
+      navigate('/list-students');
+    }
+  }
 
   const handleCancelDelete = () => {
     setIsModalOpen(false);
   };
-
-  if (!aluno) {
-    return <div>Aluno não encontrado</div>;
-  }
 
   return (
     <Layout>
@@ -50,7 +52,7 @@ export function DetailStudents() {
               onConfirmDelete={handleDeleteConfirmation}
               onCancel={handleCancelDelete}
               entityName={"o aluno"}
-              text={`${aluno.nome} ${aluno.matricula} - ${aluno.codTurma}`}
+              text={`${aluno.nome} ${aluno.matricula} - ${aluno.codTurma ? aluno.codTurma : 'Sem Turma'}`}
             />
           )}
         </div>
@@ -105,7 +107,7 @@ export function DetailStudents() {
                 Endereço
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {aluno.endereco.logradouro}, {aluno.endereco.bairro}, {aluno.endereco.numero} - {aluno.endereco.municipio}/{aluno.endereco.uf}
+                {aluno.endereco?.logradouro}, {aluno.endereco?.bairro}, {aluno.endereco?.numero} - {aluno.endereco?.municipio}/{aluno.endereco?.uf}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
