@@ -18,6 +18,7 @@ export function InfoClass() {
     const handleEditClass = (turma: any) => {
 		  navigate(`/register-class/${turma.codTurma}`, { state: { turma }});
 	  };
+    
 
     const handleDeleteConfirmation = async () => {
       await deleteClass(turma.codTurma);

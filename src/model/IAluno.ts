@@ -4,7 +4,7 @@ export type IAluno = {
     dataNascimento: string;
     cpf: string  | null;
     rg: string  | null;
-    matricula: number  | null;
+    matricula: string  | null;
     telefone: string;
     email: string;
     endereco: IEndereco | null;

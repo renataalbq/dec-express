@@ -24,6 +24,10 @@ export const AdminRoutes = createBrowserRouter([
     element: <RegisterStudent />,
   },
   {
+    path: "/register-student/:alunoId",
+    element: <RegisterStudent />,
+  },
+  {
     path: "/detail-students/:alunoId",
     element: <DetailStudents />,
   },

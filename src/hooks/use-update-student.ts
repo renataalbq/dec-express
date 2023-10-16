@@ -5,11 +5,11 @@ function useUpdateStudent() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const updateStudent = async (cod_aluno: number, studentData: IAluno) => {
+  const updateStudent = async (matricula: number, studentData: IAluno) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8080/decexpress/aluno/${cod_aluno}`, {
+      const response = await fetch(`http://localhost:8080/decexpress/aluno/${matricula}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,12 +1,30 @@
 import { Layout } from "@/components/layout";
 import { AlertMessage } from "@/components/message/message";
 import useCreateClass from "@/hooks/use-create-class";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import useUpdateClass from "@/hooks/use-update-class";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function RegisterClass() {
   const navigate = useNavigate();
   const { createClass, isLoading, error } = useCreateClass(); 
+  const location = useLocation();
+  const turma = location?.state?.turma;
+  const { updateClass, isLoading: isLoadingUpdate, error: isErrorUpdate } = useUpdateClass();
+  const [isUpdate, setIsUpdate] = useState(false)
+
+  useEffect(() => {
+    if (turma) {
+      setFormData({
+        ano: turma.ano,
+        serie: turma.serie,
+        nivel: turma.nivel,
+        turma: turma.turma,
+      });
+      setIsUpdate(true)
+    }
+  }, [turma]);
+  
   const [formData, setFormData] = useState({
     ano: 0,
     serie: 0,
@@ -18,16 +36,27 @@ export function RegisterClass() {
 
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
+  
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: name === 'ano' || name === 'serie' ? parseInt(value) : value,
     });
   };
 
     const handleSaveClass = async () => {
     if (!formData.ano || !formData.serie || !formData.turma || !formData.nivel) {
       setErrorMessage("Preencha todos os campos obrigatórios.");
-    } else {
+    } else if (turma) {
+      setErrorMessage(''); 
+      await updateClass(turma.codTurma, formData);
+      if (!isErrorUpdate) {
+        setSuccessMessage("Turma alterada com sucesso");
+        setTimeout(() => {
+          navigate('/list-class');
+        }, 1000);
+      }
+    }
+    else {
       setErrorMessage(''); 
       await createClass(formData);
       if (!error) {
@@ -42,13 +71,13 @@ export function RegisterClass() {
   return (
     <Layout>
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-semibold">Cadastrar nova turma</h1>
+        <h1 className="text-2xl font-semibold">{isUpdate ? 'Atualizar turma' : 'Cadastrar nova turma'}</h1>
         <button
           onClick={handleSaveClass}
           type="submit" disabled={isLoading}
           className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 py-2 rounded hover:from-blue-800 hover:to-blue-500"
         >
-          {isLoading ? 'Carregando...' : 'Salvar turma'}
+          {isLoading || isLoadingUpdate ? 'Carregando...' : (isUpdate ? 'Atualizar turma' : 'Salvar Turma')}
         </button>
       </div>
       <div className="bg-white p-6 shadow-md">
@@ -71,9 +100,9 @@ export function RegisterClass() {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
               >
-                <option value="2023">2023</option>
-                <option value="2024">2024</option>
-                <option value="2025">2025</option>
+                <option value={2023}>2023</option>
+                <option value={2024}>2024</option>
+                <option value={2025}>2025</option>
               </select>
             </div>
             <div className="w-1/2">
@@ -87,15 +116,15 @@ export function RegisterClass() {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
               >
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6">6</option>
-                <option value="7">7</option>
-                <option value="8">8</option>
-                <option value="9">9</option>
+                <option value={1}>1</option>
+                <option value={2}>2</option>
+                <option value={3}>3</option>
+                <option value={4}>4</option>
+                <option value={5}>5</option>
+                <option value={6}>6</option>
+                <option value={7}>7</option>
+                <option value={8}>8</option>
+                <option value={9}>9</option>
               </select>
             </div>
           </div>

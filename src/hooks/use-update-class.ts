@@ -23,6 +23,7 @@ function useUpdateClass() {
 
       setIsLoading(false);
     } catch (error) {
+      console.log(error)
       setError('Erro ao atualizar turma');
       setIsLoading(false);
     }

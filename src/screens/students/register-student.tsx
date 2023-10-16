@@ -1,13 +1,45 @@
 import { Layout } from "@/components/layout";
 import { AlertMessage } from "@/components/message/message";
 import useCreateStudent from "@/hooks/use-create-student";
+import useUpdateStudent from "@/hooks/use-update-student";
 import { date_format } from "@/utils/date-formatter";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function RegisterStudent() {
   const navigate = useNavigate();
-  const { createStudent, error } = useCreateStudent();
+  const { createStudent,isLoading, error } = useCreateStudent();
+  const location = useLocation();
+  const aluno = location?.state?.aluno;
+  const { updateStudent, isLoading: isLoadingUpdate, error: isErrorUpdate } = useUpdateStudent();
+  const [isUpdate, setIsUpdate] = useState(false)
+
+  useEffect(() => {
+    if (aluno) {
+      setFormData({
+        nome: aluno.nome,
+        dataNascimento: aluno.dataNascimento,
+        cpf: aluno.cpf,
+        rg: aluno.rg,
+        telefone:  aluno.telefone,
+        email:  aluno.email,
+        matricula:  aluno.matricula,
+        codTurma:  aluno.codTurma,
+        endereco: {
+          cep: aluno.cep,
+          logradouro: aluno.logradouro,
+          bairro: aluno.bairro,
+          numero: aluno.numero,
+          uf: aluno.uf,
+          municipio: aluno.municipio,
+          complemento: aluno.complemento,
+        },
+      });
+      setIsUpdate(true)
+    }
+  }, [aluno]);
+  
+  
   const [formData, setFormData] = useState({
     nome: "",
     dataNascimento: "",
@@ -24,8 +56,8 @@ export function RegisterStudent() {
     },
     telefone: "",
     email: "",
-    matricula: 0,
-    codTurma: 0,
+    matricula: "",
+    codTurma: null,
   });
 
   const [successMessage, setSuccessMessage] = useState("");
@@ -56,8 +88,18 @@ export function RegisterStudent() {
   };
 
   const handleSaveStudents = async () => {
-    if (!formData.nome || !formData.dataNascimento || formData.telefone || formData.email) {
+    if (!formData.nome || !formData.dataNascimento || !formData.telefone || !formData.email) {
+      console.log(formData)
       setErrorMessage("Preencha todos os campos obrigatórios.");
+    } else if (aluno) {
+      setErrorMessage(''); 
+      await updateStudent(aluno.matricula, formData);
+      if (!isErrorUpdate) {
+        setSuccessMessage("Aluno alterado com sucesso");
+        setTimeout(() => {
+          navigate('/list-students');
+        }, 1000);
+      }
     } else {
       setErrorMessage("");
       await createStudent(formData);
@@ -73,12 +115,13 @@ export function RegisterStudent() {
   return (
     <Layout>
       <div className="flex justify-between mb-4">
-        <h1 className="text-2xl font-semibold">Cadastrar novo aluno</h1>
+      <h1 className="text-2xl font-semibold">{isUpdate ? 'Atualizar aluno' : 'Cadastrar novo aluno'}</h1>
         <button
           onClick={handleSaveStudents}
           className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 py-2 rounded hover:from-blue-800 hover:to-blue-500"
         >
-          Salvar aluno
+        {isLoading || isLoadingUpdate ? 'Carregando...' : (isUpdate ? 'Atualizar aluno' : 'Salvar aluno')}
+
         </button>
       </div>
       <div className="bg-white p-6 shadow-md">
@@ -92,7 +135,7 @@ export function RegisterStudent() {
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label htmlFor="nome" className="block font-semibold">
-                Nome do aluno: *
+                Nome do aluno: <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -107,7 +150,7 @@ export function RegisterStudent() {
             </div>
             <div className="w-1/2">
               <label htmlFor="dataNascimento" className="block font-semibold">
-                Data de nascimento: *
+                Data de nascimento: <span className="text-red-500">*</span>
               </label>
               <input
                 type="string"
@@ -156,7 +199,7 @@ export function RegisterStudent() {
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label htmlFor="telefone" className="block font-semibold">
-                Telefone: *
+                Telefone: <span className="text-red-500">*</span>
               </label>
               <input
                 type="tel"
@@ -171,7 +214,7 @@ export function RegisterStudent() {
             </div>
             <div className="w-1/2">
               <label htmlFor="email" className="block font-semibold">
-                Email:*
+                Email: <span className="text-red-500">*</span>
               </label>
               <input
                 type="email"
@@ -311,7 +354,7 @@ export function RegisterStudent() {
                 type="text"
                 id="codTurma"
                 name="codTurma"
-                value={formData.codTurma}
+                value={formData.codTurma || undefined}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
                 placeholder="Turma"

@@ -12,8 +12,8 @@ export function DetailStudents() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { deleteStudents, error } = useDeleteStudents();
 
-  const handleEditClass = () => {
-    navigate("/register-student");
+  const handleEditStudent = (aluno: any) => {
+    navigate(`/register-student/${aluno.matricula}`, {state: { aluno }});
   };
 
   const handleDeleteConfirmation = async () => {
@@ -36,7 +36,7 @@ export function DetailStudents() {
         </div>
         <div className="flex gap-6">
           <button
-            onClick={handleEditClass}
+            onClick={() => handleEditStudent(aluno)}
             className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500"
           >
             Editar Aluno
