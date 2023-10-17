@@ -167,7 +167,7 @@ export function RegisterStudent() {
           <div className="flex space-x-4">
             <div className="w-1/2">
               <label htmlFor="cpf" className="block font-semibold">
-                CPF:
+                CPF: <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -182,7 +182,7 @@ export function RegisterStudent() {
             </div>
             <div className="w-1/2">
               <label htmlFor="rg" className="block font-semibold">
-                RG:
+                RG: <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -344,6 +344,7 @@ export function RegisterStudent() {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
                 placeholder="Matrícula"
+                disabled
               />
             </div>
             <div className="w-1/2">
@@ -358,6 +359,7 @@ export function RegisterStudent() {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
                 placeholder="Turma"
+                disabled
               />
             </div>
           </div>

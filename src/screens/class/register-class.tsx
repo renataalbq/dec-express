@@ -12,6 +12,7 @@ export function RegisterClass() {
   const turma = location?.state?.turma;
   const { updateClass, isLoading: isLoadingUpdate, error: isErrorUpdate } = useUpdateClass();
   const [isUpdate, setIsUpdate] = useState(false)
+  console.log(isErrorUpdate)
 
   useEffect(() => {
     if (turma) {
@@ -68,6 +69,7 @@ export function RegisterClass() {
     }
   };
 
+
   return (
     <Layout>
       <div className="flex justify-between mb-4">
@@ -100,6 +102,7 @@ export function RegisterClass() {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
               >
+                <option value={undefined}>Selecione o ano</option>
                 <option value={2023}>2023</option>
                 <option value={2024}>2024</option>
                 <option value={2025}>2025</option>
@@ -115,7 +118,9 @@ export function RegisterClass() {
                 value={formData.serie}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                disabled={isUpdate}
               >
+                <option value={undefined}>Selecione a série </option>
                 <option value={1}>1</option>
                 <option value={2}>2</option>
                 <option value={3}>3</option>
@@ -141,6 +146,7 @@ export function RegisterClass() {
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
                 placeholder="Ex: A"
+                disabled={isUpdate}
               />
             </div>
             <div className="w-1/2">
@@ -153,6 +159,7 @@ export function RegisterClass() {
                 value={formData.nivel}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                disabled={isUpdate}
               >
                 <option value="">Selecionar nível</option>
                 <option value="ENSINO_FUNDAMENTAL_I">Ensino Fundamental I</option>
