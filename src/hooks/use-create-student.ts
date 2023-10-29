@@ -1,4 +1,5 @@
 import { IAluno } from '@/model/IAluno';
+import { authorizedFetch } from '@/services/auth.interceptor';
 import { useState } from 'react';
 
 function useCreateStudent() {
@@ -10,7 +11,7 @@ function useCreateStudent() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/decexpress/aluno', {
+      const response = await authorizedFetch('http://localhost:8080/decexpress/aluno', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

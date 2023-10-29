@@ -9,6 +9,8 @@ import { ListStudents } from "@/screens/students/list-students";
 import { RegisterStudent } from "@/screens/students/register-student";
 import { createBrowserRouter } from "react-router-dom";
 import {DetailStudents} from "@/screens/students/detail-students.tsx";
+import { StudentProfile } from "@/screens/students/student-profile";
+import { StudentClass } from "@/screens/class/student-class";
 
 export const AdminRoutes = createBrowserRouter([
   {
@@ -54,6 +56,14 @@ export const AdminRoutes = createBrowserRouter([
   {
     path: "/list-students",
     element: <ListStudents />,
+  },
+  {
+    path: "/student-profile",
+    element: <StudentProfile />,
+  },
+  {
+    path: "/student-class",
+    element: <StudentClass />,
   },
   {
     path: "/login",

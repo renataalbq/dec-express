@@ -1,4 +1,5 @@
 import { IAluno } from '@/model/IAluno';
+import { authorizedFetch } from '@/services/auth.interceptor';
 import { useState } from 'react';
 
 function useUpdateStudent() {
@@ -9,7 +10,7 @@ function useUpdateStudent() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8080/decexpress/aluno/${matricula}`, {
+      const response = await authorizedFetch(`http://localhost:8080/decexpress/aluno/${matricula}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

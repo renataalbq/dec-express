@@ -1,4 +1,5 @@
 import { IAluno } from '@/model/IAluno';
+import { authorizedFetch } from '@/services/auth.interceptor';
 import { useEffect, useState } from 'react';
 
 function useGetAllStudents() {
@@ -9,7 +10,9 @@ function useGetAllStudents() {
   useEffect(() => {
     setIsLoading(true);
 
-    fetch('http://localhost:8080/decexpress/aluno')
+    authorizedFetch('http://localhost:8080/decexpress/aluno', {
+      method: 'GET',
+    })
       .then((response) => response.json())
       .then((data) => {
         setStudents(data);

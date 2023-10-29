@@ -1,4 +1,5 @@
 import { ITurmaDTO } from '@/model/ITurma';
+import { authorizedFetch } from '@/services/auth.interceptor';
 import { useState } from 'react';
 
 function useUpdateClass() {
@@ -9,7 +10,7 @@ function useUpdateClass() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8080/decexpress/turma/${codTurma}`, {
+      const response = await authorizedFetch(`http://localhost:8080/decexpress/turma/${codTurma}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

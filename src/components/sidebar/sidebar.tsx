@@ -14,6 +14,8 @@ const Sidebar = (props: SidebarProps)  => {
     const location = useLocation()
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const isAdmin = false
+    console.log(isAdmin)
 
     useEffect(() => {
       const handleResize = () => {
@@ -62,10 +64,19 @@ const Sidebar = (props: SidebarProps)  => {
         <div className="overflow-y-auto py-5 px-3 h-full bg-slate-800 ">
           
           <ul className="space-y-2">
+            {isAdmin ?
+            <>
               <SidebarItem icon={<RxDashboard />} text={'Dashboard'} active={location.pathname === '/home'} link='/home' />
               <SidebarItem icon={<IoDocumentTextOutline />} text={'Documentos'} active={location.pathname.includes('documents')} link='/list-documents' />
               <SidebarItem icon={<FaPeopleRoof />} text={'Turmas'} active={location.pathname.includes('class')} link='/list-class' />
               <SidebarItem icon={<PiStudentDuotone />} text={'Alunos'} active={location.pathname.includes('student')} link='/list-students' />
+            </>            
+              :
+            <>
+              <SidebarItem icon={<IoDocumentTextOutline />} text={'Documentos'} active={location.pathname.includes('documents')} link='/list-documents' />
+              <SidebarItem icon={<FaPeopleRoof />} text={'Sua turma'} active={location.pathname.includes('class')} link='/list-class' />
+              <SidebarItem icon={<PiStudentDuotone />} text={'Perfil'} active={location.pathname.includes('student')} link='/list-students' />
+            </>}
           </ul>
           <ul
             className="pt-5 mt-5 space-y-2 border-t border-gray-500">
@@ -82,10 +93,19 @@ const Sidebar = (props: SidebarProps)  => {
         <div className="overflow-y-auto py-5 px-3 h-full bg-slate-800 ">
           
           <ul className="space-y-2">
+          {isAdmin ?
+            <>
               <SidebarItem icon={<RxDashboard />} text={'Dashboard'} active={location.pathname === '/home'} link='/home' />
               <SidebarItem icon={<IoDocumentTextOutline />} text={'Documentos'} active={location.pathname.includes('documents')} link='/list-documents' />
               <SidebarItem icon={<FaPeopleRoof />} text={'Turmas'} active={location.pathname.includes('class')} link='/list-class' />
               <SidebarItem icon={<PiStudentDuotone />} text={'Alunos'} active={location.pathname.includes('student')} link='/list-students' />
+            </>            
+              :
+            <>
+              <SidebarItem icon={<IoDocumentTextOutline />} text={'Documentos'} active={location.pathname.includes('documents')} link='/list-documents' />
+              <SidebarItem icon={<FaPeopleRoof />} text={'Sua turma'} active={location.pathname.includes('class')} link='/student-class' />
+              <SidebarItem icon={<PiStudentDuotone />} text={'Perfil'} active={location.pathname.includes('profile')} link='/student-profile' />
+            </>}
           </ul>
           <ul
             className="pt-5 mt-5 space-y-2 border-t border-gray-500">

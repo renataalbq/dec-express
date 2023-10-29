@@ -1,3 +1,4 @@
+import { authorizedFetch } from '@/services/auth.interceptor';
 import { useState } from 'react';
 
 function useDeleteStudents() {
@@ -8,7 +9,7 @@ function useDeleteStudents() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8080/decexpress/aluno/${matricula}`, {
+      const response = await authorizedFetch(`http://localhost:8080/decexpress/aluno/${matricula}`, {
         method: 'DELETE',
       });
 

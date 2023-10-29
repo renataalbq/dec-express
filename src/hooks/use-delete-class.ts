@@ -1,3 +1,4 @@
+import { authorizedFetch } from '@/services/auth.interceptor';
 import { useState } from 'react';
 
 function useDeleteClass() {
@@ -8,7 +9,7 @@ function useDeleteClass() {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:8080/decexpress/turma/${codTurma}`, {
+      const response = await authorizedFetch(`http://localhost:8080/decexpress/turma/${codTurma}`, {
         method: 'DELETE',
       });
 

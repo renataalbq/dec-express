@@ -1,15 +1,47 @@
+import { useState } from 'react';
 import logo1 from '../../assets/logo2.png'
 import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const navigate = useNavigate();
-
+  const [loginData, setLoginData] = useState({
+    email: "",
+    password: "",
+  });
+  
   const handleSignUp = () => {
     navigate("/signup");
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     navigate("/home");
+
+    try {
+      const response = await fetch('http://localhost:3000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(loginData),
+      }); 
+
+      if (response.ok) {
+        const responseData = await response.json();
+        const authToken = responseData.token;
+
+        localStorage.setItem('token', authToken);
+        navigate("/home");
+      } else {
+        console.error('Erro ao fazer login');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
+    const { name, value } = e.target;
+    setLoginData({ ...loginData, [name]: value });
   };
 
   return (
@@ -38,8 +70,10 @@ export const Login = () => {
                   name="email"
                   type="email"
                   autoComplete="email"
-                  required
+                  value={loginData.email}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                  required
                 />
               </div>
             </div>
@@ -54,15 +88,16 @@ export const Login = () => {
                   name="password"
                   type="password"
                   autoComplete="current-password"
-                  required
+                  value={loginData.password}
+                  onChange={handleInputChange}
                   className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                  required
                 />
               </div>
             </div>
 
             <div>
               <button
-                type="submit"
                 onClick={handleLogin}
                 className="flex w-full justify-center rounded-md bg-gradient-to-r from-blue-500 to-blue-800 text-white shadow-sm px-4 py-1.5 rounded hover:from-blue-800 hover:to-blue-500"
               >
