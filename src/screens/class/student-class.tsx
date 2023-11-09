@@ -7,8 +7,8 @@ export function StudentClass() {
     <Layout>
           <div className="flex justify-between">
             <div>
-            <h1 className="text-2xl font-semibold">Turma: 1º Ano A - {nivel_format('ENSINO_MÉDIO')}</h1>
-            <p className="text-sm text-neutral-500">Informações da turma: 1'º Ano A - {nivel_format('ENSINO_MÉDIO')} ({'2023'})</p>
+            <h1 className="text-2xl font-semibold">Turma: 1º Ano A - {nivel_format('ENSINO_MEDIO')}</h1>
+            <p className="text-sm text-neutral-500">Informações da turma: 1º Ano A - {nivel_format('ENSINO_MEDIO')} ({'2023'})</p>
             </div>
           </div>
           <hr className="mt-4" />

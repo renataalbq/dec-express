@@ -1,3 +1,4 @@
+import { AlertMessage } from "@/components/message/message";
 import { ModalAlert } from "@/components/modal-alert/modal-alert";
 import useCreateStudent from "@/hooks/use-create-student";
 import { date_format } from "@/utils/date-formatter";
@@ -14,6 +15,7 @@ export const SignUp = () => {
   });
   const { createStudent, error } = useCreateStudent();
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const createUser = async () => {
     try {
@@ -40,15 +42,18 @@ export const SignUp = () => {
             await createStudent(studentData);
 
             if (!error) {
-              console.log("Aluno criado com sucesso.");
+              setSuccessMessage("Aluno criado com sucesso");
             } else {
               setIsModalOpen(true);
             }
           } else {
+            setSuccessMessage("Usuário criado com sucesso");
             console.log("Usuário criado com sucesso.");
           }
 
-          navigate("/login");
+          setTimeout(() => {
+            navigate('/login');
+          }, 1000);
         } else {
           setIsModalOpen(true);
         }
@@ -90,6 +95,9 @@ export const SignUp = () => {
         </h2>
       </div>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+      {successMessage && (
+          <AlertMessage type="success" message={successMessage} />
+        )}
         {isModalOpen && (
           <ModalAlert
             onConfirm={handleBackModal}
