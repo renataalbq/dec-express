@@ -35,7 +35,6 @@ export function InfoClass() {
     };
 
     const handleSearchStudents = () => {
-      console.log(turma.listaAlunos)
       const term = searchTerm.toLowerCase();
       const studentsFilter = turma.listaAlunos.filter((aluno: any) => {
         const matriculaValida = typeof aluno.matricula === 'string' && aluno.matricula.toLowerCase().includes(term);
@@ -43,7 +42,6 @@ export function InfoClass() {
         return aluno.nome.toLowerCase().includes(term) || matriculaValida || cpfValido;
       });
       setFilteredStudents(studentsFilter);
-      console.log(term)
     };
   
     const handleTermChange = (e: { target: { value: SetStateAction<string>; }; }) => {

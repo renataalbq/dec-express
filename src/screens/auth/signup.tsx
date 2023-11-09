@@ -1,3 +1,4 @@
+import { ModalAlert } from "@/components/modal-alert/modal-alert";
 import useCreateStudent from "@/hooks/use-create-student";
 import { date_format } from "@/utils/date-formatter";
 import { useState } from "react";
@@ -10,19 +11,20 @@ export const SignUp = () => {
     email: "",
     password: "",
     isAdmin: true,
-  })
+  });
   const { createStudent, error } = useCreateStudent();
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const createUser = async () => {
     try {
-      const verifyEmail = await fetch(`http://localhost:8080/decexpress/aluno/verificar-email/${userData.email}`);
+      const verifyEmail = await fetch(
+        `http://localhost:8080/decexpress/aluno/verificar-email/${userData.email}`
+      );
       if (verifyEmail.ok) {
-        const response = await fetch('http://localhost:3000/users', {
-          method: 'POST',
+        const response = await fetch("http://localhost:3000/users", {
+          method: "POST",
           headers: {
-            'Content-Type': 'application/json',
+            "Content-Type": "application/json",
           },
           body: JSON.stringify(userData),
         });
@@ -40,38 +42,44 @@ export const SignUp = () => {
             if (!error) {
               console.log("Aluno criado com sucesso.");
             } else {
-              setErrorMessage(error)
+              setIsModalOpen(true);
             }
-          }
-          else {
+          } else {
             console.log("Usuário criado com sucesso.");
           }
 
           navigate("/login");
         } else {
-          setErrorMessage('Email já pertence a outro usuário')
+          setIsModalOpen(true);
         }
       } else {
-        setErrorMessage('Email já pertence a outro usuário');
+        setIsModalOpen(true);
       }
     } catch (error) {
       console.error(error);
     }
   };
 
-  const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
-    const { name, value } = e.target;
-    setUserData({ ...userData, [name]: value });
-  };
-  
-  const handleIsAdminChange = (e: { target: { name: any; checked: any; }; }) => {
-    const { name, checked } = e.target;
-    setUserData({ ...userData, [name]: checked });
-  };
+  const handleInputChange = (e: any) => {
+    const { name, value, type, checked } = e.target;
 
+    if (type === "checkbox") {
+      setUserData({ ...userData, [name]: checked });
+    } else {
+      if (name === "isAdmin") {
+        setUserData({ ...userData, [name]: value === "true" });
+      } else {
+        setUserData({ ...userData, [name]: value });
+      }
+    }
+  };
 
   const cancelRegistration = () => {
     navigate("/login");
+  };
+
+  const handleBackModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
@@ -82,19 +90,11 @@ export const SignUp = () => {
         </h2>
       </div>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-      {showErrorModal && (
-          <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
-            <div className="relative max-w-md p-8 bg-white shadow-md rounded-lg">
-              <p className="text-gray-800">{errorMessage}</p>
-              <button
-                onClick={() => setShowErrorModal(false)}
-                className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                X
-              </button>
-            </div>
-          </div>
+        {isModalOpen && (
+          <ModalAlert
+            onConfirm={handleBackModal}
+            text={'Este email pertence a outro usuário, tente utilizar outro email!'}
+          />
         )}
         <form className="space-y-6" action="#" method="POST">
           <div>
@@ -157,38 +157,46 @@ export const SignUp = () => {
             </div>
           </div>
           <fieldset>
-              <legend className="text-sm font-semibold leading-6 text-gray-900">Selecione a categoria:</legend>
-              <div className="mt-6 space-y-6">
-                <div className="flex items-center gap-x-3">
-                  <input
-                    id="admin"
-                    name="isAdmin"
-                    type="radio"
-                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                    onChange={handleIsAdminChange}
-                    checked={userData.isAdmin == true ? true : false}
-                  />
-                  <label htmlFor="admin" className="block text-sm font-medium leading-6 text-gray-900">
-                    Admin
-                  </label>
-                </div>
-                <div className="flex items-center gap-x-3">
-                  <input
-                    id="aluno"
-                    name="isAdmin"
-                    type="radio"
-                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
-                    onChange={handleIsAdminChange}
-                    checked={userData.isAdmin == false ? true : false}
-                  />
-                  <label htmlFor="aluno" className="block text-sm font-medium leading-6 text-gray-900">
-                    Aluno
-                  </label>
-                </div>
-                
+            <legend className="text-sm font-semibold leading-6 text-gray-900">
+              Selecione a categoria:
+            </legend>
+            <div className="mt-6 space-y-6">
+              <div className="flex items-center gap-x-3">
+                <input
+                  id="admin"
+                  name="isAdmin"
+                  type="radio"
+                  value="true"
+                  className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                  onChange={handleInputChange}
+                  checked={userData.isAdmin}
+                />
+                <label
+                  htmlFor="admin"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Admin
+                </label>
               </div>
-            </fieldset>
-         
+              <div className="flex items-center gap-x-3">
+                <input
+                  id="aluno"
+                  name="isAdmin"
+                  type="radio"
+                  value="false"
+                  className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                  onChange={handleInputChange}
+                  checked={!userData.isAdmin}
+                />
+                <label
+                  htmlFor="aluno"
+                  className="block text-sm font-medium leading-6 text-gray-900"
+                >
+                  Aluno
+                </label>
+              </div>
+            </div>
+          </fieldset>
         </form>
         <div className="justify-between flex">
           <button
@@ -205,7 +213,6 @@ export const SignUp = () => {
             Cancelar
           </button>
         </div>
-        
       </div>
     </div>
   );

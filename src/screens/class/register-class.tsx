@@ -12,7 +12,6 @@ export function RegisterClass() {
   const turma = location?.state?.turma;
   const { updateClass, isLoading: isLoadingUpdate, error: isErrorUpdate } = useUpdateClass();
   const [isUpdate, setIsUpdate] = useState(false)
-  console.log(isErrorUpdate)
 
   useEffect(() => {
     if (turma) {

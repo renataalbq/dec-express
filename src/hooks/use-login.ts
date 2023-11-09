@@ -18,7 +18,7 @@ const useLogin = () => {
         const responseData = await response.json();
         const authToken = responseData.token;
 
-        sessionStorage.setItem('token', authToken);
+        localStorage.setItem('token', authToken);
         setError(null);
         setIsAuthenticated(true);
       } else {

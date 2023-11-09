@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import { SidebarItem } from "./sidebar-item"
 import { IoDocumentTextOutline } from 'react-icons/io5';
 import { PiStudentDuotone } from 'react-icons/pi';
@@ -16,6 +16,7 @@ const Sidebar = (props: SidebarProps)  => {
     const location = useLocation()
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
       const handleResize = () => {
@@ -33,7 +34,8 @@ const Sidebar = (props: SidebarProps)  => {
     };
 
     const handleLogout = () => {
-      sessionStorage.removeItem('token');
+      localStorage.removeItem('token');
+      navigate('/login')
     };
     
     return (
@@ -83,7 +85,11 @@ const Sidebar = (props: SidebarProps)  => {
           </ul>
           <ul
             className="pt-5 mt-5 space-y-2 border-t border-gray-500">
-           <SidebarItem icon={<RiLogoutBoxLine />} text={'Sair'} active={false} link='/login' />
+              <li onClick={handleLogout} className="relative flex items-center py-3 my-2 font-medium cursor-pointer
+            transition-colors hover:bg-gray-700 text-gray-500">
+                    <div className="ml-3"><RiLogoutBoxLine /></div>
+                    <span className="w-52 ml-3">Sair</span>
+                </li>
           </ul>
         </div>
       </aside>
@@ -112,13 +118,11 @@ const Sidebar = (props: SidebarProps)  => {
           </ul>
           <ul
             className="pt-5 mt-5 space-y-2 border-t border-gray-500">
-           <li
-          className="cursor-pointer flex items-center"
-          onClick={handleLogout}
-        >
-          <RiLogoutBoxLine />
-          <span className="ml-2">Sair</span>
-        </li>
+              <li onClick={handleLogout} className="relative flex items-center py-3 my-2 font-medium cursor-pointer
+            transition-colors hover:bg-gray-700 text-gray-500">
+                    <div className="ml-3"><RiLogoutBoxLine /></div>
+                    <span className="w-52 ml-3">Sair</span>
+                </li>
           </ul>
         </div>
       </aside>
