@@ -27,6 +27,7 @@ function useGetStudentByMatricula(matricula: string) {
         .catch((err) => {
           setError('Ocorreu um erro ao buscar o aluno');
           setIsLoading(false);
+          console.log(err)
         });
     }, [matricula]);
   

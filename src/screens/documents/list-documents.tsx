@@ -1,14 +1,6 @@
 import { Layout } from "@/components/layout";
 import { BiSearch } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
-
 export function ListDocuments() {
-  const navigate = useNavigate();
-
-  const handleRequestDocument = () => {
-    navigate("/request-document");
-  };
-
   return (
     <Layout>
       <div className="flex justify-between">

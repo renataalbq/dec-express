@@ -3,7 +3,6 @@ import { AlertMessage } from "@/components/message/message";
 import useCreateStudent from "@/hooks/use-create-student";
 import useGetAllClasses from "@/hooks/use-get-classes";
 import useUpdateStudent from "@/hooks/use-update-student";
-import { ITurmaDTO } from "@/model/ITurma";
 import { date_format } from "@/utils/date-formatter";
 import { nivel_format } from "@/utils/nivel-formatter";
 import { useEffect, useState } from "react";
@@ -17,7 +16,6 @@ export function RegisterStudent() {
   const { updateStudent, isLoading: isLoadingUpdate, error: isErrorUpdate } = useUpdateStudent();
   const [isUpdate, setIsUpdate] = useState(false)
   const { classes } = useGetAllClasses(); 
-  const [selectedTurma, setSelectedTurma] = useState<ITurmaDTO | null>(null);
 
   useEffect(() => {
     if (aluno) {
@@ -42,7 +40,6 @@ export function RegisterStudent() {
         },
       });
       setIsUpdate(true)
-      setSelectedTurma(aluno.turma)
     }
   }, [aluno]);
   
