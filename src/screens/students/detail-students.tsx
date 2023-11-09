@@ -4,6 +4,8 @@ import { useState } from "react";
 import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
 import { Layout } from "@/components/layout";
 import useDeleteStudents from "@/hooks/use-delete-student";
+import { nivel_format } from "@/utils/nivel-formatter";
+import useGetStudentByMatricula from "@/hooks/use-get-student-by-mat";
 
 export function DetailStudents() {
   const navigate = useNavigate();
@@ -11,6 +13,7 @@ export function DetailStudents() {
   const { aluno } = location.state;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { deleteStudents, error } = useDeleteStudents();
+  const { student } = useGetStudentByMatricula(aluno.matricula);
 
   const handleEditStudent = (aluno: any) => {
     navigate(`/register-student/${aluno.matricula}`, {state: { aluno }});
@@ -32,11 +35,11 @@ export function DetailStudents() {
     <Layout>
       <div className="flex justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">Aluno: {aluno.nome} </h1>
+          <h1 className="text-2xl font-semibold">Aluno: {student?.nome} </h1>
         </div>
         <div className="flex gap-6">
           <button
-            onClick={() => handleEditStudent(aluno)}
+            onClick={() => handleEditStudent(student)}
             className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500"
           >
             Editar Aluno
@@ -52,7 +55,7 @@ export function DetailStudents() {
               onConfirmDelete={handleDeleteConfirmation}
               onCancel={handleCancelDelete}
               entityName={"o aluno"}
-              text={`${aluno.nome} ${aluno.matricula} - ${aluno.codTurma ? aluno.codTurma : 'Sem Turma'}`}
+              text={`${student?.nome} ${student?.matricula} - ${student?.turma ? student?.turma.serie : 'Sem Turma'}`}
             />
           )}
         </div>
@@ -67,7 +70,7 @@ export function DetailStudents() {
                 Nome
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {aluno.nome}
+                {student?.nome}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -75,7 +78,7 @@ export function DetailStudents() {
                 Data de nascimento
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {aluno.dataNascimento}
+                {student?.dataNascimento}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -83,7 +86,7 @@ export function DetailStudents() {
                 Matricula
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {aluno.matricula}
+                {student?.matricula}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -91,7 +94,7 @@ export function DetailStudents() {
                 Email
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {aluno.email}
+                {student?.email}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -99,7 +102,7 @@ export function DetailStudents() {
                 Telefone
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {aluno.telefone}
+                {student?.telefone}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -107,7 +110,8 @@ export function DetailStudents() {
                 Endereço
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {aluno.endereco?.logradouro}, {aluno.endereco?.bairro}, {aluno.endereco?.numero} - {aluno.endereco?.municipio}/{aluno.endereco?.uf}
+                {student?.endereco ? 
+                (`${student?.endereco?.logradouro}, ${student?.endereco?.bairro}, ${student?.endereco?.numero} - ${student?.endereco?.municipio}/${student?.endereco?.uf}`) : 'Aluno sem endereço cadastrado'}
               </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -115,7 +119,8 @@ export function DetailStudents() {
                 Turma
               </dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {aluno.codTurma}
+                {student?.turma ?
+                (`${student?.turma.serie}º Ano ${student?.turma.turma} - ${nivel_format(student?.turma.nivel)}`) : 'Aluno sem vínculo com turma'} 
               </dd>
             </div>
           </dl>

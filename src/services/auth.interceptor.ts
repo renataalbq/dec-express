@@ -1,5 +1,5 @@
 export function authorizedFetch(url: any, options: any) {
-  const token = localStorage.getItem('token');
+  const token = sessionStorage.getItem('token');
 
   if (token) {
     options.headers = options.headers ?? {};
