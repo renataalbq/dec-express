@@ -1,4 +1,4 @@
-import { IAluno } from '@/model/IAluno';
+import { IAlunoDTO } from '@/model/IAluno';
 import { authorizedFetch } from '@/services/auth.interceptor';
 import { useState } from 'react';
 
@@ -6,7 +6,7 @@ function useUpdateStudent() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const updateStudent = async (matricula: number, studentData: IAluno) => {
+  const updateStudent = async (matricula: number, studentData: IAlunoDTO) => {
     setIsLoading(true);
 
     try {

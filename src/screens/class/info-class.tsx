@@ -2,11 +2,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { FaTrashCan } from "react-icons/fa6";
 import { BiSearch } from "react-icons/bi";
 import { Pagination } from "@/components/pagination/pagination";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
 import { Layout } from "@/components/layout";
 import { nivel_format } from "@/utils/nivel-formatter";
 import useDeleteClass from "@/hooks/use-delete-class";
+import { IAluno } from "@/model/IAluno";
 
 export function InfoClass() {
     const navigate = useNavigate();
@@ -14,7 +15,9 @@ export function InfoClass() {
     const { turma } = location.state;
     const [isModalOpen, setIsModalOpen] = useState(false);
     const { deleteClass, error } = useDeleteClass();
-    
+    const [searchTerm, setSearchTerm] = useState('');
+    const [filteredStudents, setFilteredStudents] = useState(turma.listaAlunos);
+  
     const handleEditClass = (turma: any) => {
 		  navigate(`/register-class/${turma.codTurma}`, { state: { turma }});
 	  };
@@ -29,6 +32,23 @@ export function InfoClass() {
 
     const handleCancelDelete = () => {
       setIsModalOpen(false);
+    };
+
+    const handleSearchStudents = () => {
+      console.log(turma.listaAlunos)
+      const term = searchTerm.toLowerCase();
+      const studentsFilter = turma.listaAlunos.filter((aluno: any) => {
+        const matriculaValida = typeof aluno.matricula === 'string' && aluno.matricula.toLowerCase().includes(term);
+        const cpfValido = typeof aluno.cpf === 'string' && aluno.cpf.toLowerCase().includes(term);
+        return aluno.nome.toLowerCase().includes(term) || matriculaValida || cpfValido;
+      });
+      setFilteredStudents(studentsFilter);
+      console.log(term)
+    };
+  
+    const handleTermChange = (e: { target: { value: SetStateAction<string>; }; }) => {
+      setSearchTerm(e.target.value);
+      handleSearchStudents();
     };
 
   return (
@@ -65,6 +85,8 @@ export function InfoClass() {
                   type="text"
                   className="bg-gray-200 text-gray-800 border rounded-md pl-4 pr-8 w-96 py-2"
                   placeholder="Buscar aluno (nome, matrícula ou CPF)"
+                  value={searchTerm}
+                  onChange={handleTermChange}
                 />
                 <span className="absolute top-1/2 right-2 transform -translate-y-1/2">
                   <BiSearch />
@@ -80,16 +102,18 @@ export function InfoClass() {
                   <th className="py-2 px-4">Telefone</th>
                   <th className="py-2 px-4">Email</th>
                   <th className="py-2 px-4">Matrícula</th>
+                  <th className="py-2 px-4">CPF</th>
                 </tr>
               </thead>
               <tbody className="bg-gray-500 text-white text-center">
-                {Array.from({ length: 8 }).map((_, index) => (
+                {filteredStudents.map((aluno: IAluno, index: number) => (
                   <tr key={index}>
-                    <td className="py-2 px-4">Nome do Aluno</td>
-                    <td className="py-2 px-4">01/01/2000</td>
-                    <td className="py-2 px-4">(12) 3456-7890</td>
-                    <td className="py-2 px-4">aluno@escola.com</td>
-                    <td className="py-2 px-4">12345</td>
+                    <td className="py-2 px-4">{aluno.nome}</td>
+                    <td className="py-2 px-4">{aluno.dataNascimento}</td>
+                    <td className="py-2 px-4">{aluno.telefone}</td>
+                    <td className="py-2 px-4">{aluno.email}</td>
+                    <td className="py-2 px-4">{aluno.matricula}</td>
+                    <td className="py-2 px-4">{aluno.cpf}</td>
                   </tr>
                 ))}
               </tbody>

@@ -15,7 +15,6 @@ export const Login = () => {
 
   const handleLogin = async () => {
     navigate("/home");
-
     try {
       const response = await fetch('http://localhost:3000/login', {
         method: 'POST',
@@ -23,12 +22,12 @@ export const Login = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(loginData),
-      }); 
-
+      });
+  
       if (response.ok) {
         const responseData = await response.json();
         const authToken = responseData.token;
-
+  
         localStorage.setItem('token', authToken);
         navigate("/home");
       } else {

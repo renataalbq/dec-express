@@ -18,9 +18,6 @@ const CardStudent = (props: CardStudentProps) => (
             <div className="w-1/5">
                 <CardItem label="Email" value={props.aluno.email} />
             </div>
-            <div className="w-1/5">
-                <CardItem label="Turma" value={props.aluno.codTurma ? `${props.aluno.codTurma}` : 'Aluno sem vínculo'} />
-            </div>
             <div className="mt-2">
                 <button
                     onClick={() => props.handleDetailStudents(props.aluno)}

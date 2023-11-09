@@ -6,7 +6,7 @@ export type ITurma = {
     turma: string;
     serie: number;
     nivel: string
-    listaAlunos?: Array<IAluno>;
+    listaAlunos?: Array<IAluno> | null;
 }
 
 export type ITurmaDTO = {

@@ -1,3 +1,5 @@
+import useCreateStudent from "@/hooks/use-create-student";
+import { date_format } from "@/utils/date-formatter";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -7,23 +9,50 @@ export const SignUp = () => {
     name: "",
     email: "",
     password: "",
-    role: "admin",
+    isAdmin: true,
   })
-  console.log(userData)
+  const { createStudent, error } = useCreateStudent();
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const createUser = async () => {
     try {
-      const response = await fetch('http://localhost:3000/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
+      const verifyEmail = await fetch(`http://localhost:8080/decexpress/aluno/verificar-email/${userData.email}`);
+      if (verifyEmail.ok) {
+        const response = await fetch('http://localhost:3000/users', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(userData),
+        });
 
-      if (response.ok) {
-        console.log("Usuário criado com sucesso.");
+        if (response.ok) {
+          if (userData.isAdmin === false) {
+            const studentData = {
+              nome: userData.name,
+              email: userData.email,
+              dataNascimento: date_format("1900-01-01"),
+              telefone: "000",
+            };
+            await createStudent(studentData);
+
+            if (!error) {
+              console.log("Aluno criado com sucesso.");
+            } else {
+              setErrorMessage(error)
+            }
+          }
+          else {
+            console.log("Usuário criado com sucesso.");
+          }
+
+          navigate("/login");
+        } else {
+          setErrorMessage('Email já pertence a outro usuário')
+        }
       } else {
-        console.error('Erro ao criar usuário');
+        setErrorMessage('Email já pertence a outro usuário');
       }
     } catch (error) {
       console.error(error);
@@ -33,6 +62,11 @@ export const SignUp = () => {
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
+  };
+  
+  const handleIsAdminChange = (e: { target: { name: any; checked: any; }; }) => {
+    const { name, checked } = e.target;
+    setUserData({ ...userData, [name]: checked });
   };
 
 
@@ -48,6 +82,20 @@ export const SignUp = () => {
         </h2>
       </div>
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+      {showErrorModal && (
+          <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
+            <div className="relative max-w-md p-8 bg-white shadow-md rounded-lg">
+              <p className="text-gray-800">{errorMessage}</p>
+              <button
+                onClick={() => setShowErrorModal(false)}
+                className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              >
+                X
+              </button>
+            </div>
+          </div>
+        )}
         <form className="space-y-6" action="#" method="POST">
           <div>
             <label
@@ -108,25 +156,38 @@ export const SignUp = () => {
               />
             </div>
           </div>
-          <div>
-            <label
-              htmlFor="role"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Categoria
-            </label>
-            <div className="mt-2">
-              <input
-                id="role"
-                name="role"
-                type="role"
-                value={userData.role}
-                onChange={handleInputChange}
-                autoComplete="role"
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-              />
-            </div>
-          </div>
+          <fieldset>
+              <legend className="text-sm font-semibold leading-6 text-gray-900">Selecione a categoria:</legend>
+              <div className="mt-6 space-y-6">
+                <div className="flex items-center gap-x-3">
+                  <input
+                    id="admin"
+                    name="isAdmin"
+                    type="radio"
+                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    onChange={handleIsAdminChange}
+                    checked={userData.isAdmin == true ? true : false}
+                  />
+                  <label htmlFor="admin" className="block text-sm font-medium leading-6 text-gray-900">
+                    Admin
+                  </label>
+                </div>
+                <div className="flex items-center gap-x-3">
+                  <input
+                    id="aluno"
+                    name="isAdmin"
+                    type="radio"
+                    className="h-4 w-4 border-gray-300 text-indigo-600 focus:ring-indigo-600"
+                    onChange={handleIsAdminChange}
+                    checked={userData.isAdmin == false ? true : false}
+                  />
+                  <label htmlFor="aluno" className="block text-sm font-medium leading-6 text-gray-900">
+                    Aluno
+                  </label>
+                </div>
+                
+              </div>
+            </fieldset>
          
         </form>
         <div className="justify-between flex">
