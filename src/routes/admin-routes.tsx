@@ -16,6 +16,18 @@ export const AdminRoutes = createBrowserRouter([
     element: <Home />,
   },
   {
+    path: "/login",
+    element: <Login />,
+  },
+  {
+    path: "/signup",
+    element: <SignUp />,
+  },
+  {
+    path: "/",
+    element: <Login />,
+  },
+  {
     path: "/list-students",
     element: <ListStudents />,
   },
@@ -55,16 +67,5 @@ export const AdminRoutes = createBrowserRouter([
     path: "/list-students",
     element: <ListStudents />,
   },
-  {
-    path: "/login",
-    element: <Login />,
-  },
-  {
-    path: "/signup",
-    element: <SignUp />,
-  },
-  {
-    path: "/",
-    element: <Login />,
-  },
+
 ]);

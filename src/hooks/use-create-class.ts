@@ -1,4 +1,5 @@
 import { ITurmaDTO } from '@/model/ITurma';
+import { authorizedFetch } from '@/services/auth.interceptor';
 import { useState } from 'react';
 
 function useCreateClass() {
@@ -10,7 +11,7 @@ function useCreateClass() {
     setIsLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8080/decexpress/turma', {
+      const response = await authorizedFetch('http://localhost:8080/decexpress/turma', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -24,6 +25,7 @@ function useCreateClass() {
 
       setIsLoading(false);
     } catch (error) {
+      console.log(error)
       setError('Error ao criar turma');
       setIsLoading(false);
     }

@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ITurma } from '@/model/ITurma';
+import { authorizedFetch } from '@/services/auth.interceptor';
 
 function useGetAllClasses() {
   const [classes, setClasses] = useState<ITurma[] | null>(null);
@@ -9,7 +10,9 @@ function useGetAllClasses() {
   useEffect(() => {
     setIsLoading(true);
 
-    fetch('http://localhost:8080/decexpress/turma')
+    authorizedFetch('http://localhost:8080/decexpress/turma', {
+      method: 'GET',
+    })
       .then((response) => response.json())
       .then((data) => {
         setClasses(data);

@@ -1,13 +1,15 @@
+import { ITurmaDTO } from "./ITurma";
+
 export type IAluno = {
-    codTurma: number | null;
     nome: string;
     dataNascimento: string;
-    cpf: string  | null;
-    rg: string  | null;
-    matricula: string  | null;
+    cpf?: string  | null;
+    rg?: string  | null;
+    matricula?: string  | null;
     telefone: string;
     email: string;
-    endereco: IEndereco | null;
+    endereco?: IEndereco | null;
+    turma?: ITurmaDTO | null;
 }
 
 export type IEndereco = {
@@ -18,4 +20,15 @@ export type IEndereco = {
     uf: string;
     municipio: string;
     complemento: string;
+}
+
+export type IAlunoDTO = {
+    nome: string;
+    dataNascimento: string;
+    cpf: string  | null;
+    rg: string  | null;
+    telefone: string;
+    email: string;
+    endereco: IEndereco | null;
+    turma?: ITurmaDTO | null;
 }

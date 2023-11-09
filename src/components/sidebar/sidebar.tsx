@@ -6,6 +6,8 @@ import { FaBars, FaPeopleRoof } from 'react-icons/fa6';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { RxDashboard } from 'react-icons/rx';
 import { ReactNode, useEffect, useState } from "react";
+import { isAdmin, name } from "@/model/IPayload";
+
 interface SidebarProps {
   children: ReactNode;
 }
@@ -29,11 +31,15 @@ const Sidebar = (props: SidebarProps)  => {
     const toggleSidebar = () => {
       setIsOpen(!isOpen);
     };
+
+    const handleLogout = () => {
+      sessionStorage.removeItem('token');
+    };
     
     return (
       <div>
       <nav className="bg-white border-b border-gray-200  fixed left-0 right-0 top-0 z-50">
-        <div className="lg:w-64 left-0 top-0 pt-3 pb-3 bg-blue-800">
+        <div className="lg:w-64 left-0 top-0 pt-3 pb-3 bg-blue-800 flex">
           <div className="flex justify-start items-center ">
           <button
           data-drawer-target="logo-sidebar"
@@ -49,9 +55,8 @@ const Sidebar = (props: SidebarProps)  => {
               <span className="px-4 text-white self-center text-xl font-semibold ">DecExpress</span>
             </a>
           </div>
-        
+          <span className="ml-36 whitespace-nowrap">{`Olá, ${name}`}</span>
         </div>
-        
       </nav>
   {isMobile ?
       <aside
@@ -62,10 +67,19 @@ const Sidebar = (props: SidebarProps)  => {
         <div className="overflow-y-auto py-5 px-3 h-full bg-slate-800 ">
           
           <ul className="space-y-2">
+            {isAdmin ?
+            <>
               <SidebarItem icon={<RxDashboard />} text={'Dashboard'} active={location.pathname === '/home'} link='/home' />
               <SidebarItem icon={<IoDocumentTextOutline />} text={'Documentos'} active={location.pathname.includes('documents')} link='/list-documents' />
               <SidebarItem icon={<FaPeopleRoof />} text={'Turmas'} active={location.pathname.includes('class')} link='/list-class' />
               <SidebarItem icon={<PiStudentDuotone />} text={'Alunos'} active={location.pathname.includes('student')} link='/list-students' />
+            </>            
+              :
+            <>
+              <SidebarItem icon={<IoDocumentTextOutline />} text={'Documentos'} active={location.pathname.includes('document')} link='/request-document' />
+              <SidebarItem icon={<FaPeopleRoof />} text={'Sua turma'} active={location.pathname.includes('class')} link='/list-class' />
+              <SidebarItem icon={<PiStudentDuotone />} text={'Perfil'} active={location.pathname.includes('profile')} link={`/student-profile`} />
+            </>}
           </ul>
           <ul
             className="pt-5 mt-5 space-y-2 border-t border-gray-500">
@@ -82,14 +96,29 @@ const Sidebar = (props: SidebarProps)  => {
         <div className="overflow-y-auto py-5 px-3 h-full bg-slate-800 ">
           
           <ul className="space-y-2">
+          {isAdmin ?
+            <>
               <SidebarItem icon={<RxDashboard />} text={'Dashboard'} active={location.pathname === '/home'} link='/home' />
               <SidebarItem icon={<IoDocumentTextOutline />} text={'Documentos'} active={location.pathname.includes('documents')} link='/list-documents' />
               <SidebarItem icon={<FaPeopleRoof />} text={'Turmas'} active={location.pathname.includes('class')} link='/list-class' />
               <SidebarItem icon={<PiStudentDuotone />} text={'Alunos'} active={location.pathname.includes('student')} link='/list-students' />
+            </>            
+              :
+            <>
+              <SidebarItem icon={<IoDocumentTextOutline />} text={'Documentos'} active={location.pathname.includes('document')} link='/request-document' />
+              <SidebarItem icon={<FaPeopleRoof />} text={'Sua turma'} active={location.pathname.includes('class')} link='/student-class' />
+              <SidebarItem icon={<PiStudentDuotone />} text={'Perfil'} active={location.pathname.includes('profile')} link={`/student-profile/:matricula`} />
+            </>}
           </ul>
           <ul
             className="pt-5 mt-5 space-y-2 border-t border-gray-500">
-           <SidebarItem icon={<RiLogoutBoxLine />} text={'Sair'} active={false} link='/login' />
+           <li
+          className="cursor-pointer flex items-center"
+          onClick={handleLogout}
+        >
+          <RiLogoutBoxLine />
+          <span className="ml-2">Sair</span>
+        </li>
           </ul>
         </div>
       </aside>

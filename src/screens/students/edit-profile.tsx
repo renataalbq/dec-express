@@ -1,6 +1,5 @@
 import { Layout } from "@/components/layout";
 import { AlertMessage } from "@/components/message/message";
-import useCreateStudent from "@/hooks/use-create-student";
 import useGetAllClasses from "@/hooks/use-get-classes";
 import useUpdateStudent from "@/hooks/use-update-student";
 import { date_format } from "@/utils/date-formatter";
@@ -8,13 +7,11 @@ import { nivel_format } from "@/utils/nivel-formatter";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-export function RegisterStudent() {
+export function EditProfile() {
   const navigate = useNavigate();
-  const { createStudent,isLoading, error } = useCreateStudent();
   const location = useLocation();
   const aluno = location?.state?.aluno;
   const { updateStudent, isLoading: isLoadingUpdate, error: isErrorUpdate } = useUpdateStudent();
-  const [isUpdate, setIsUpdate] = useState(false)
   const { classes } = useGetAllClasses(); 
 
   useEffect(() => {
@@ -39,7 +36,6 @@ export function RegisterStudent() {
           complemento: aluno.complemento,
         },
       });
-      setIsUpdate(true)
     }
   }, [aluno]);
   
@@ -106,30 +102,23 @@ export function RegisterStudent() {
       if (!isErrorUpdate) {
         setSuccessMessage("Aluno alterado com sucesso");
         setTimeout(() => {
-          navigate('/list-students');
+          navigate('/student-profile');
         }, 1000);
       }
     } else {
       setErrorMessage("");
-      await createStudent(formData);
-      if (!error) {
-        setSuccessMessage("Aluno criado com sucesso");
-        setTimeout(() => {
-          navigate('/list-students');
-        }, 1000);
-      }
     }
   };
 
   return (
     <Layout>
       <div className="flex justify-between mb-4">
-      <h1 className="text-2xl font-semibold">{isUpdate ? 'Atualizar aluno' : 'Cadastrar novo aluno'}</h1>
+      <h1 className="text-2xl font-semibold">{'Atualizar aluno'}</h1>
         <button
           onClick={handleSaveStudents}
           className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 py-2 rounded hover:from-blue-800 hover:to-blue-500"
         >
-        {isLoading || isLoadingUpdate ? 'Carregando...' : (isUpdate ? 'Atualizar aluno' : 'Salvar aluno')}
+        {isLoadingUpdate ? 'Carregando...' : 'Atualizar aluno'}
 
         </button>
       </div>
@@ -372,7 +361,6 @@ export function RegisterStudent() {
                   });
                 }}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-                disabled={!isUpdate}
               >
                 <option value="">Selecione uma turma</option>
                 {classes?.map((turma) => (
