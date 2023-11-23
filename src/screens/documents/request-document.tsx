@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export function RequestDocument() {
   const [isLoading, setIsLoading] = useState(false);
-  const [documentId, setDocumentId] = useState(null);
+  //const [documentId, setDocumentId] = useState(null);
 
   const createDocument = async () => {
     setIsLoading(true);
