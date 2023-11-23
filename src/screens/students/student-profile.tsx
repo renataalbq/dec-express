@@ -6,12 +6,13 @@ import { Layout } from "@/components/layout";
 import useDeleteStudents from "@/hooks/use-delete-student";
 import useGetStudentByMatricula from "@/hooks/use-get-student-by-mat";
 import useGetStudentByEmail from "@/hooks/use-find-by-email";
-import { email } from "@/model/IPayload";
+import { useAuth } from "@/store/auth.context";
 
 export function StudentProfile() {
   const navigate = useNavigate();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { deleteStudents } = useDeleteStudents();
+  const { email } = useAuth();
   const { student: studentEmail } = useGetStudentByEmail(email);
   const { student, error } = useGetStudentByMatricula(studentEmail?.matricula || '');
 

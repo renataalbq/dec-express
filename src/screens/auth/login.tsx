@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import logo1 from '../../assets/logo2.png'
 import { useNavigate } from "react-router-dom";
+import { useAuth } from '@/store/auth.context';
 
 export const Login = () => {
   const navigate = useNavigate();
@@ -8,13 +9,16 @@ export const Login = () => {
     email: "",
     password: "",
   });
+const [error, setError] = useState('');
+const { login } = useAuth();
   
   const handleSignUp = () => {
     navigate("/signup");
   };
 
-  const handleLogin = async () => {
-    navigate("/home");
+  const handleLogin = async (event: { preventDefault: () => void; }) => {
+    event.preventDefault();
+    setError('');
     try {
       const response = await fetch('http://localhost:3000/login', {
         method: 'POST',
@@ -27,16 +31,16 @@ export const Login = () => {
       if (response.ok) {
         const responseData = await response.json();
         const authToken = responseData.token;
-  
-        localStorage.setItem('token', authToken);
+        login(authToken);
         navigate("/home");
       } else {
-        console.error('Erro ao fazer login');
+        setError('Falha no login. Verifique seu e-mail e senha.');
       }
     } catch (error) {
-      console.error(error);
+      alert('Erro ao fazer login: ' + error);
     }
   };
+  
 
   const handleInputChange = (e: { target: { name: any; value: any; }; }) => {
     const { name, value } = e.target;
@@ -71,7 +75,7 @@ export const Login = () => {
                   autoComplete="email"
                   value={loginData.email}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                  className={`w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500 ${error ? 'border-red-500' : ''}`}
                   required
                 />
               </div>
@@ -89,16 +93,22 @@ export const Login = () => {
                   autoComplete="current-password"
                   value={loginData.password}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                  className={`w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500 ${error ? 'border-red-500' : ''}`}
                   required
                 />
               </div>
             </div>
 
+            {error && (
+              <p className="mt-2 text-sm text-red-500">
+                {error}
+              </p>
+            )}
+
             <div>
               <button
                 onClick={handleLogin}
-                className="flex w-full justify-center rounded-md bg-gradient-to-r from-blue-500 to-blue-800 text-white shadow-sm px-4 py-1.5 rounded hover:from-blue-800 hover:to-blue-500"
+                className="flex w-full justify-center rounded-md bg-gradient-to-r from-blue-500 to-blue-800 text-white shadow-sm px-4 py-1.5 hover:from-blue-800 hover:to-blue-500"
               >
                 Entrar
               </button>

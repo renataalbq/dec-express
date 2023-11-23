@@ -6,7 +6,7 @@ import { FaBars, FaPeopleRoof } from 'react-icons/fa6';
 import { RiLogoutBoxLine } from 'react-icons/ri';
 import { RxDashboard } from 'react-icons/rx';
 import { ReactNode, useEffect, useState } from "react";
-import { isAdmin, name } from "@/model/IPayload";
+import { useAuth } from "@/store/auth.context";
 
 interface SidebarProps {
   children: ReactNode;
@@ -17,6 +17,7 @@ const Sidebar = (props: SidebarProps)  => {
     const [isOpen, setIsOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const navigate = useNavigate();
+    const { isAdmin, name, logout } = useAuth();
 
     useEffect(() => {
       const handleResize = () => {
@@ -34,8 +35,8 @@ const Sidebar = (props: SidebarProps)  => {
     };
 
     const handleLogout = () => {
-      localStorage.removeItem('token');
-      navigate('/login')
+      logout();
+      navigate('/login');
     };
     
     return (
@@ -136,3 +137,4 @@ const Sidebar = (props: SidebarProps)  => {
 
 
 export { Sidebar }
+

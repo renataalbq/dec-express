@@ -1,6 +1,16 @@
 import { Layout } from "@/components/layout";
+import { Pagination } from "@/components/pagination/pagination";
+import useGetDocumentsList from "@/hooks/use-get-documents";
+import { date_format } from "@/utils/date-formatter";
+import { SetStateAction, useState } from "react";
 import { BiSearch } from "react-icons/bi";
 export function ListDocuments() {
+  const [page, setPage] = useState(1);
+  const { documents, totalPages } = useGetDocumentsList(page);
+
+  const handlePageChange = (newPage: SetStateAction<number>) => {
+    setPage(newPage);
+  };
   return (
     <Layout>
       <div className="flex justify-between">
@@ -27,23 +37,28 @@ export function ListDocuments() {
             <thead className="bg-black text-white">
               <tr>
                 <th className="py-2 px-4">Nome</th>
-                <th className="py-2 px-4">Email</th>
                 <th className="py-2 px-4">Matrícula</th>
                 <th className="py-2 px-4">Data da Emissão</th>
+                <th className="py-2 px-4">Data de Validade</th>
               </tr>
             </thead>
             <tbody className="bg-gray-500 text-white text-center">
-              {Array.from({ length: 8 }).map((_, index) => (
+              {documents?.map((document, index) => (
                 <tr key={index}>
-                  <td className="py-2 px-4">Nome do Aluno</td>
-                  <td className="py-2 px-4">aluno@escola.com</td>
-                  <td className="py-2 px-4">12345</td>
-                  <td className="py-2 px-4">01/10/2023</td>
+                  <td className="py-2 px-4">{document.nome_aluno}</td>
+                  <td className="py-2 px-4">{document.matricula}</td>
+                  <td className="py-2 px-4">{document.data_solicitacao}</td>
+                  <td className="py-2 px-4">{date_format(document.data_validade)}</td>
 
                 </tr>
               ))}
             </tbody>
           </table>
+          <Pagination
+            current={page} 
+            total={totalPages}
+            onPageChange={handlePageChange}
+          />
         </div>
       </div>
     </Layout>
