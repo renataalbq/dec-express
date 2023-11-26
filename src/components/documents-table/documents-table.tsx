@@ -1,5 +1,5 @@
 import { date_format } from "@/utils/date-formatter";
-import { BiSearch } from "react-icons/bi";
+import { BiSearch, BiTrash } from "react-icons/bi";
 import { Pagination } from "../pagination/pagination";
 import { SetStateAction } from "react";
 import { IDocuments } from "@/model/IDocuments";
@@ -13,6 +13,7 @@ interface DocuementsTableProps {
   totalPages: number;
   handlePageChange: (newPage: SetStateAction<number>) => void;
   titleTable: string;
+  onDeleteDoc: () => void;
 }
 export const DocumentsTable = (props: DocuementsTableProps) => {
   return (
@@ -50,6 +51,7 @@ export const DocumentsTable = (props: DocuementsTableProps) => {
             >
               Data de Validade
             </th>
+            <th className="py-2 px-4">Excluir</th>
           </tr>
         </thead>
         <tbody className="bg-gray-500 text-white text-center">
@@ -63,6 +65,7 @@ export const DocumentsTable = (props: DocuementsTableProps) => {
               <td className="py-2 px-4">
                 {date_format(document.data_validade)}
               </td>
+              <td className="py-2 px-4 pl-14" onClick={props.onDeleteDoc}><BiTrash /></td>
             </tr>
           ))}
         </tbody>

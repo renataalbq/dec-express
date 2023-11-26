@@ -52,7 +52,7 @@ export function RequestDocument() {
         body: JSON.stringify({
           data_solicitacao: formatDate(dataAtual), 
           data_validade: formatDate(dataValidade), 
-          tipo: documentType == 'declaracao' ? 'historico' : 'declaracao',
+          tipo: documentType,
           matricula: student?.matricula,
           cpf: student?.cpf ? student.cpf : '',
           nome_aluno: student?.nome,
@@ -84,25 +84,26 @@ export function RequestDocument() {
     handleCloseModal();
   };
 
-  const sendEmail = async () => {
-    if (documentId) {
-      try {
-        const response = await fetch(`http://localhost:3000/documents/${documentId}/send_email`, {
-          method: 'GET',
-        });
-        const data = await response.json();
-        if (response.ok) {
-          setAlertMessage({ type: "success", message: "E-mail enviado com sucesso!" });
-          handleCloseModal();
-        } else {
-          setAlertMessage({ type: "error", message: "Erro ao enviar e-mail" });
-          console.error("Erro ao enviar e-mail:", data);
-        }
-      } catch (error) {
-        console.error('Erro ao enviar o email:', error);
-      }
-    }
-  };
+  // const sendEmail = async () => {
+  //   if (documentId) {
+  //     try {
+  //       const response = await fetch(`http://localhost:3000/documents/${documentId}/send_email`, {
+  //         method: 'GET',
+  //       });
+        
+  //       const data = await response.json();
+  //       if (response.ok) {
+  //         setAlertMessage({ type: "success", message: "E-mail enviado com sucesso!" });
+  //         handleCloseModal();
+  //       } else {
+  //         setAlertMessage({ type: "error", message: "Erro ao enviar e-mail" });
+  //         console.error("Erro ao enviar e-mail:", data);
+  //       }
+  //     } catch (error) {
+  //       console.error('Erro ao enviar o email:', error);
+  //     }
+  //   }
+  // };
 
   return (
     <Layout>
@@ -112,7 +113,6 @@ export function RequestDocument() {
       {showModal && (
       <ModalOptions
         onDownload={downloadPdf}
-        onSendEmail={sendEmail}
         onCancel={handleCloseModal}
       />
     )}

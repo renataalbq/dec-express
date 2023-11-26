@@ -1,24 +1,39 @@
 import { DocumentsTable } from "@/components/documents-table/documents-table";
 import { Layout } from "@/components/layout";
 import { NavigationMenu } from "@/components/navigation-menu/navigation-menu";
+import useDeleteDoc from "@/hooks/use-delete.doc";
 import useGetDocumentsList from "@/hooks/use-get-documents";
-import { SetStateAction, useMemo, useState } from "react";
+import { SetStateAction, useEffect, useMemo, useState } from "react";
 
 export function ListDocuments() {
   const [page, setPage] = useState(1);
-  const { documents, totalPages } = useGetDocumentsList(page);
-  const [sortField, setSortField] = useState("");
-  const [sortOrder, setSortOrder] = useState("asc"); 
+  const [sortDecField, setSortDecField] = useState("");
+  const [sortDecOrder, setSortDecOrder] = useState("asc");
+  const [sortHistField, setSortHistField] = useState("");
+  const [sortHistOrder, setSortHistOrder] = useState("asc"); 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentView, setCurrentView] = useState('declaracao');
+  const {deleteDoc} = useDeleteDoc()
+
+  useEffect(() => {
+    setPage(1);
+  }, [currentView]);
+
+  const { documents, totalPages } = useGetDocumentsList(page);
 
   const handlePageChange = (newPage: SetStateAction<number>) => {
     setPage(newPage);
   };
 
   const handleSortChange = (field: any) => {
-    setSortOrder(sortField === field && sortOrder === "asc" ? "desc" : "asc");
-    setSortField(field);
+    if (currentView == 'declaracao'){
+      setSortDecOrder(sortDecField === field && sortDecOrder === "asc" ? "desc" : "asc");
+      setSortDecField(field);
+    } else {
+      setSortHistOrder(sortHistField === field && sortHistOrder === "asc" ? "desc" : "asc");
+      setSortHistField(field);
+    }
+    
   };
 
   const handleMenuSelect = (view: SetStateAction<string>) => {
@@ -28,15 +43,19 @@ export function ListDocuments() {
   const sortedDocuments = useMemo(() => {
     if (!documents) return [];
     
-    const sortedDocs = [...documents];
-    sortedDocs.sort((a, b) => {
+    const filteredDocs = documents.filter(doc => doc.tipo === currentView);
+
+    const sortField = currentView === 'declaracao' ? sortDecField : sortHistField;
+    const sortOrder = currentView === 'declaracao' ? sortDecOrder : sortHistOrder;
+
+    return filteredDocs.sort((a, b) => {
       if (a[sortField] < b[sortField]) return sortOrder === "asc" ? -1 : 1;
       if (a[sortField] > b[sortField]) return sortOrder === "asc" ? 1 : -1;
       return 0;
     });
+  }, [documents, sortDecField, sortDecOrder, sortHistField, sortHistOrder, currentView]);
 
-    return sortedDocs;
-  }, [documents, sortField, sortOrder]);
+
 
   const handleSearchChange = (event: { target: { value: SetStateAction<string>; }; }) => {
     setSearchQuery(event.target.value);
@@ -49,7 +68,6 @@ export function ListDocuments() {
       </div>
       <NavigationMenu onMenuSelect={handleMenuSelect} currentView={currentView} />
       <div className="space-y-2">
-      {currentView === 'declaracao' ? (
           <DocumentsTable 
             sortedDocuments={sortedDocuments}
             handleSortChange={handleSortChange}
@@ -58,20 +76,10 @@ export function ListDocuments() {
             page={page}
             totalPages={totalPages}
             handlePageChange={handlePageChange}
-            titleTable={"Solicitações de declaração"}
+            titleTable={`Solicitações de ${currentView === 'declaracao' ? `declaração` : `histórico`}`}
+            onDeleteDoc={() => deleteDoc(0)}
           />
-        ) : (
-          <DocumentsTable 
-            sortedDocuments={[]}
-            handleSortChange={handleSortChange}
-            handleSearchChange={handleSearchChange}
-            searchQuery={''}
-            page={0}
-            totalPages={0}
-            handlePageChange={handlePageChange}
-            titleTable={"Solicitações de histórico"}
-          />
-        )}
+        
       </div>
     </Layout>
   );

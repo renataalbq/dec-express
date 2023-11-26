@@ -2,7 +2,6 @@ import {AiOutlineClose} from "react-icons/ai"
  
 interface ModalOptionsProps {
   onDownload: () => void;
-  onSendEmail: () => void;
   onCancel: () => void;
 }
 
@@ -20,15 +19,7 @@ const ModalOptions = (props: ModalOptionsProps) => {
           <p className="text-lg font-semibold mb-4">
             Seu documento foi gerado com sucesso!
           </p>
-          <p className="text-sm text-center text-gray-500 mb-4">
-            Escolha como deseja receber:
-          </p>
           <div className="flex justify-center mt-10">
-          <button onClick={props.onSendEmail}
-             className="mr-4 bg-gradient-to-r from-cyan-700 to-cyan-900 text-white px-4 py-2 rounded hover:from-cyan-900 hover:to-cyan-700"
-            >
-            Enviar por email
-            </button>
 
             <button onClick={props.onDownload}
               className="bg-gradient-to-r from-sky-700 to-sky-900 text-white px-4 py-2 rounded hover:from-sky-900 hover:to-sky-700"
