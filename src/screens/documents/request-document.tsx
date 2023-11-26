@@ -1,13 +1,48 @@
 import { DocumentCard } from '@/components/document-card/document-card';
 import { Layout } from '@/components/layout';
+import { AlertMessage, AlertMessageProps } from '@/components/message/message';
+import { ModalOptions } from '@/components/modal-options/modal-options';
+import useGetStudentByEmail from '@/hooks/use-find-by-email';
+import { useAuth } from '@/store/auth.context';
 import { useState } from 'react';
 
 export function RequestDocument() {
-  const [isLoading, setIsLoading] = useState(false);
-  //const [documentId, setDocumentId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [documentId, setDocumentId] = useState(null);
+  const { email } = useAuth();
+  const { student } = useGetStudentByEmail(email)
+  const [alertMessage, setAlertMessage] = useState<AlertMessageProps>({ type: "success", message: "" });
+  const [documentType, setDocumentType] = useState('');
 
-  const createDocument = async () => {
-    setIsLoading(true);
+  const formatDate = (date: string | number | Date) => {
+    let d = new Date(date),
+        month = '' + (d.getMonth() + 1),
+        day = '' + d.getDate(),
+        year = d.getFullYear();
+  
+    if (month.length < 2) 
+        month = '0' + month;
+    if (day.length < 2) 
+        day = '0' + day;
+  
+    return [day, month, year].join('/');
+  };
+
+  const handleOpenModal = () => {
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+  };
+
+
+  const createDocument = async (type: string) => {
+    const dataAtual = new Date();
+    const dataValidade = new Date(dataAtual);
+    dataValidade.setMonth(dataValidade.getMonth() + 4);
+    setDocumentType(type);
+
     try {
       const response = await fetch('http://localhost:3000/documents', {
         method: 'POST',
@@ -15,18 +50,58 @@ export function RequestDocument() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-        data_solicitacao: Date.now(), 
-        data_validade: "2024-01-01", 
-        tipo: "declaracao",
-        matricula: "12345",
-        cpf: "74185296332",
-        nome_aluno: "João Silva" }),
+          data_solicitacao: formatDate(dataAtual), 
+          data_validade: formatDate(dataValidade), 
+          tipo: documentType == 'declaracao' ? 'historico' : 'declaracao',
+          matricula: student?.matricula,
+          cpf: student?.cpf ? student.cpf : '',
+          nome_aluno: student?.nome,
+          email_aluno: student?.email
+        }),
       });
-      console.log(response)
+      const data = await response.json();
+      if (response.ok) {
+        setDocumentId(data.document.id);
+        setTimeout(() => {
+          handleOpenModal();
+        }, 2000);
+      } else {
+        console.error("Erro ao criar documento:", data);
+      }
     } catch (error) {
-      console.log('caiu')
+      console.error('Erro na requisição:', error);
     }
-    setIsLoading(false);
+  };
+
+  const downloadPdf = () => {
+    console.log(documentType, 'no download')
+    if (documentType === 'declaracao') {
+      window.open(`http://localhost:3000/documents/${documentId}/download`, '_blank');
+    } else {
+      window.open(`http://localhost:3000/documents/${documentId}/download_hist`, '_blank');
+    }
+    setAlertMessage({ type: "success", message: "Download iniciado com sucesso!" });
+    handleCloseModal();
+  };
+
+  const sendEmail = async () => {
+    if (documentId) {
+      try {
+        const response = await fetch(`http://localhost:3000/documents/${documentId}/send_email`, {
+          method: 'GET',
+        });
+        const data = await response.json();
+        if (response.ok) {
+          setAlertMessage({ type: "success", message: "E-mail enviado com sucesso!" });
+          handleCloseModal();
+        } else {
+          setAlertMessage({ type: "error", message: "Erro ao enviar e-mail" });
+          console.error("Erro ao enviar e-mail:", data);
+        }
+      } catch (error) {
+        console.error('Erro ao enviar o email:', error);
+      }
+    }
   };
 
   return (
@@ -34,10 +109,20 @@ export function RequestDocument() {
     <div className="">
     <section>
       <h2 className="text-2xl font-semibold">Documentos</h2>
+      {showModal && (
+      <ModalOptions
+        onDownload={downloadPdf}
+        onSendEmail={sendEmail}
+        onCancel={handleCloseModal}
+      />
+    )}
+    {alertMessage.message && (
+        <AlertMessage type={alertMessage.type} message={alertMessage.message} />
+      )}
       <div className="flex space-x-4 mt-4">
-        <DocumentCard title={'Declaração Acadêmica'} nameButton={isLoading ? 'Gerando...' : 'Gerar declaração'} onClickButton={createDocument} />
-        <DocumentCard title={'Histórico Acadêmico'} nameButton={'Em breve'} disabled />
-        <DocumentCard title={'Boletim Bimestral'} nameButton={'Em breve'} disabled />
+        <DocumentCard title={'Declaração Acadêmica'} nameButton={'Gerar Declaração'} onClickButton={() => createDocument('declaracao')} />
+        <DocumentCard title={'Histórico Acadêmico'} nameButton={'Gerar Histórico'} onClickButton={() => createDocument('historico')} />
+        <DocumentCard title={'Boletim Bimestral'} nameButton={'Indisponível'} disabled />
       </div>
     </section>
     </div>

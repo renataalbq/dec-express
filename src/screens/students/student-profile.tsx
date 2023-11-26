@@ -1,35 +1,17 @@
 import { useNavigate } from "react-router-dom";
-import { FaTrashCan } from "react-icons/fa6";
-import { useState } from "react";
-import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
 import { Layout } from "@/components/layout";
-import useDeleteStudents from "@/hooks/use-delete-student";
 import useGetStudentByMatricula from "@/hooks/use-get-student-by-mat";
 import useGetStudentByEmail from "@/hooks/use-find-by-email";
 import { useAuth } from "@/store/auth.context";
 
 export function StudentProfile() {
   const navigate = useNavigate();
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const { deleteStudents } = useDeleteStudents();
   const { email } = useAuth();
   const { student: studentEmail } = useGetStudentByEmail(email);
-  const { student, error } = useGetStudentByMatricula(studentEmail?.matricula || '');
+  const { student } = useGetStudentByMatricula(studentEmail?.matricula || '');
 
   const handleEditStudent = (student: any) => {
     navigate(`/edit-profile/${student.matricula}`, {state: { student }});
-  };
-
-  const handleDeleteConfirmation = async (student: any) => {
-    await deleteStudents(student.matricula);
-    setIsModalOpen(false);
-    if (!error) {
-      navigate('/list-students');
-    }
-  }
-
-  const handleCancelDelete = () => {
-    setIsModalOpen(false);
   };
 
  return (
@@ -44,22 +26,9 @@ export function StudentProfile() {
             onClick={() => handleEditStudent(student)}
             className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500"
           >
-            Editar Aluno
+            Editar Perfil
           </button>
-          <button
-            onClick={() => setIsModalOpen(true)}
-            className="bg-gradient-to-r from-red-500 to-red-800 text-white px-2 rounded hover:from-red-800 hover:to-red-500"
-          >
-            <FaTrashCan />
-          </button>
-          {isModalOpen && (
-            <ConfirmationModal
-              onConfirmDelete={() => handleDeleteConfirmation(student)}
-              onCancel={handleCancelDelete}
-              entityName={"o aluno"}
-              text={`${student.nome} ${student.matricula} - ${student.turma ? student.turma : 'Sem Turma'}`}
-            />
-          )}
+          
         </div>
       </div>
       <hr className="mt-4" />

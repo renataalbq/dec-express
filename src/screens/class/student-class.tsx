@@ -1,6 +1,15 @@
 import { Layout } from "@/components/layout";
 import { nivel_format } from "@/utils/nivel-formatter";
 
+const horarios = [
+  {horario: "07:00 - 07:50", seg: "Matemática", ter: "Português", qua: "Biologia", qui: "História", sex: "Química"},
+  {horario: "07:50 - 08:40", seg: "Matemática", ter: "Português", qua: "Biologia", qui: "História", sex: "Química"},
+  {horario: "08:40 - 09:30", seg: "História", ter: "Inglês", qua: "Português", qui: "Biologia", sex: "Geografia"},
+  {horario: "10:00 - 10:50", seg: "História", ter: "Inglês", qua: "Português", qui: "Biologia", sex: "Geografia"},
+  {horario: "10:50 - 11:40", seg: "Geografia", ter: "Matemática", qua: "Química", qui: "Física", sex: "Física"},
+  {horario: "11:40 - 12:30", seg: "Geografia", ter: "Matemática", qua: "Química", qui: "Física", sex: "Física"},
+]
+
 export function StudentClass() {
 
   return (
@@ -30,14 +39,14 @@ export function StudentClass() {
                 </tr>
               </thead>
               <tbody className="bg-gray-500 text-white text-center">
-                {Array.from({ length: 8 }).map((_, index) => (
+                {horarios.map((hor, index) => (
                   <tr key={index}>
-                    <td className="py-2 px-4">07:00 - 07:50</td>
-                    <td className="py-2 px-4">Matemática</td>
-                    <td className="py-2 px-4">Português</td>
-                    <td className="py-2 px-4">Inglês</td>
-                    <td className="py-2 px-4">História</td>
-                    <td className="py-2 px-4">Geografia</td>
+                    <td className="py-2 px-4">{hor.horario}</td>
+                    <td className="py-2 px-4">{hor.seg}</td>
+                    <td className="py-2 px-4">{hor.ter}</td>
+                    <td className="py-2 px-4">{hor.qua}</td>
+                    <td className="py-2 px-4">{hor.qui}</td>
+                    <td className="py-2 px-4">{hor.sex}</td>
                   </tr>
                 ))}
               </tbody>

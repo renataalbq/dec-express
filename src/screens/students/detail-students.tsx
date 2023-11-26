@@ -31,6 +31,10 @@ export function DetailStudents() {
     setIsModalOpen(false);
   };
 
+  const handleRegisterGrades = () => {
+    navigate('/register-grade')
+  }
+
   return (
     <Layout>
       <div className="flex justify-between">
@@ -124,6 +128,12 @@ export function DetailStudents() {
               </dd>
             </div>
           </dl>
+        </div>
+        <div className="mt-6">
+        <button
+          onClick={handleRegisterGrades}
+          className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 rounded hover:from-blue-800 hover:to-blue-500"
+        >Registrar notas do aluno</button>
         </div>
       </div>
     </Layout>

@@ -1,65 +1,77 @@
+import { DocumentsTable } from "@/components/documents-table/documents-table";
 import { Layout } from "@/components/layout";
-import { Pagination } from "@/components/pagination/pagination";
+import { NavigationMenu } from "@/components/navigation-menu/navigation-menu";
 import useGetDocumentsList from "@/hooks/use-get-documents";
-import { date_format } from "@/utils/date-formatter";
-import { SetStateAction, useState } from "react";
-import { BiSearch } from "react-icons/bi";
+import { SetStateAction, useMemo, useState } from "react";
+
 export function ListDocuments() {
   const [page, setPage] = useState(1);
   const { documents, totalPages } = useGetDocumentsList(page);
+  const [sortField, setSortField] = useState("");
+  const [sortOrder, setSortOrder] = useState("asc"); 
+  const [searchQuery, setSearchQuery] = useState("");
+  const [currentView, setCurrentView] = useState('declaracao');
 
   const handlePageChange = (newPage: SetStateAction<number>) => {
     setPage(newPage);
   };
+
+  const handleSortChange = (field: any) => {
+    setSortOrder(sortField === field && sortOrder === "asc" ? "desc" : "asc");
+    setSortField(field);
+  };
+
+  const handleMenuSelect = (view: SetStateAction<string>) => {
+    setCurrentView(view);
+  };
+
+  const sortedDocuments = useMemo(() => {
+    if (!documents) return [];
+    
+    const sortedDocs = [...documents];
+    sortedDocs.sort((a, b) => {
+      if (a[sortField] < b[sortField]) return sortOrder === "asc" ? -1 : 1;
+      if (a[sortField] > b[sortField]) return sortOrder === "asc" ? 1 : -1;
+      return 0;
+    });
+
+    return sortedDocs;
+  }, [documents, sortField, sortOrder]);
+
+  const handleSearchChange = (event: { target: { value: SetStateAction<string>; }; }) => {
+    setSearchQuery(event.target.value);
+  };
+
   return (
     <Layout>
       <div className="flex justify-between">
         <h1 className="text-2xl font-semibold">Documentos</h1>
       </div>
-
-      <div className="mt-6 space-y-4">
-        <div className="bg-white shadow p-4 mt-4">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-semibold">Solicitações de declaração</h2>
-            <div className="relative">
-              <input
-                type="text"
-                className="bg-gray-200 text-gray-800 border rounded-md pl-4 pr-8 w-96 py-2"
-                placeholder="Buscar aluno (nome, matrícula ou CPF)"
-              />
-              <span className="absolute top-1/2 right-2 transform -translate-y-1/2">
-                <BiSearch />
-              </span>
-            </div>
-          </div>
-
-          <table className="w-full mt-6">
-            <thead className="bg-black text-white">
-              <tr>
-                <th className="py-2 px-4">Nome</th>
-                <th className="py-2 px-4">Matrícula</th>
-                <th className="py-2 px-4">Data da Emissão</th>
-                <th className="py-2 px-4">Data de Validade</th>
-              </tr>
-            </thead>
-            <tbody className="bg-gray-500 text-white text-center">
-              {documents?.map((document, index) => (
-                <tr key={index}>
-                  <td className="py-2 px-4">{document.nome_aluno}</td>
-                  <td className="py-2 px-4">{document.matricula}</td>
-                  <td className="py-2 px-4">{document.data_solicitacao}</td>
-                  <td className="py-2 px-4">{date_format(document.data_validade)}</td>
-
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <Pagination
-            current={page} 
-            total={totalPages}
-            onPageChange={handlePageChange}
+      <NavigationMenu onMenuSelect={handleMenuSelect} currentView={currentView} />
+      <div className="space-y-2">
+      {currentView === 'declaracao' ? (
+          <DocumentsTable 
+            sortedDocuments={sortedDocuments}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            searchQuery={searchQuery}
+            page={page}
+            totalPages={totalPages}
+            handlePageChange={handlePageChange}
+            titleTable={"Solicitações de declaração"}
           />
-        </div>
+        ) : (
+          <DocumentsTable 
+            sortedDocuments={[]}
+            handleSortChange={handleSortChange}
+            handleSearchChange={handleSearchChange}
+            searchQuery={''}
+            page={0}
+            totalPages={0}
+            handlePageChange={handlePageChange}
+            titleTable={"Solicitações de histórico"}
+          />
+        )}
       </div>
     </Layout>
   );
