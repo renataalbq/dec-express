@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { IDocuments } from '@/model/IDocuments';
 
 function useGetDocumentsList(page: number) {
@@ -7,8 +7,9 @@ function useGetDocumentsList(page: number) {
   const [error, setError] = useState<string | null>(null);
   const [totalPages, setTotalPages] = useState(0);
 
-  useEffect(() => {
+  const fetchDocuments = useCallback(() => {
     setIsLoading(true);
+    setError(null);
 
     fetch(`http://localhost:3000/documents?page=${page}`, {
       method: 'GET',
@@ -25,7 +26,11 @@ function useGetDocumentsList(page: number) {
       });
   }, [page]);
 
-  return { documents, isLoading, error, totalPages };
+  useEffect(() => {
+    fetchDocuments();
+  }, [fetchDocuments]);
+
+  return { documents, isLoading, error, totalPages, refetch: fetchDocuments };
 }
 
 export default useGetDocumentsList;

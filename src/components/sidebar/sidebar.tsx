@@ -7,6 +7,7 @@ import { RiLogoutBoxLine } from 'react-icons/ri';
 import { RxDashboard } from 'react-icons/rx';
 import { ReactNode, useEffect, useState } from "react";
 import { useAuth } from "@/store/auth.context";
+import { toCapitalize } from "@/utils/capitalize-formatter";
 
 interface SidebarProps {
   children: ReactNode;
@@ -58,7 +59,7 @@ const Sidebar = (props: SidebarProps)  => {
               <span className="px-4 text-white self-center text-xl font-semibold ">DecExpress</span>
             </a>
           </div>
-          <span className="ml-36 whitespace-nowrap">{`Olá, ${name}`}</span>
+          <span className="ml-36 whitespace-nowrap">{`Olá, ${toCapitalize(name)}`}</span>
         </div>
       </nav>
   {isMobile ?

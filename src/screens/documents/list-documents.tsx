@@ -13,17 +13,34 @@ export function ListDocuments() {
   const [sortHistOrder, setSortHistOrder] = useState("asc"); 
   const [searchQuery, setSearchQuery] = useState("");
   const [currentView, setCurrentView] = useState('declaracao');
-  const {deleteDoc} = useDeleteDoc()
+  const { documents, totalPages, refetch } = useGetDocumentsList(page);
 
   useEffect(() => {
     setPage(1);
   }, [currentView]);
 
-  const { documents, totalPages } = useGetDocumentsList(page);
+
+  const { deleteDoc } = useDeleteDoc(() => {
+    refetch();
+  });
+
+  const handleDelete = (docId: number) => {
+    deleteDoc(docId);
+  };
 
   const handlePageChange = (newPage: SetStateAction<number>) => {
     setPage(newPage);
   };
+
+  const filteredDocuments = useMemo(() => {
+    if (!documents) return [];
+  
+    return documents.filter(doc => 
+      doc.tipo === currentView && 
+      (doc.nome_aluno.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      doc.matricula?.toString().includes(searchQuery))
+    );
+  }, [documents, currentView, searchQuery]);
 
   const handleSortChange = (field: any) => {
     if (currentView == 'declaracao'){
@@ -41,9 +58,9 @@ export function ListDocuments() {
   };
 
   const sortedDocuments = useMemo(() => {
-    if (!documents) return [];
+    if (!filteredDocuments) return [];
     
-    const filteredDocs = documents.filter(doc => doc.tipo === currentView);
+    const filteredDocs = filteredDocuments.filter(doc => doc.tipo === currentView);
 
     const sortField = currentView === 'declaracao' ? sortDecField : sortHistField;
     const sortOrder = currentView === 'declaracao' ? sortDecOrder : sortHistOrder;
@@ -53,7 +70,7 @@ export function ListDocuments() {
       if (a[sortField] > b[sortField]) return sortOrder === "asc" ? 1 : -1;
       return 0;
     });
-  }, [documents, sortDecField, sortDecOrder, sortHistField, sortHistOrder, currentView]);
+  }, [filteredDocuments, documents, sortDecField, sortDecOrder, sortHistField, sortHistOrder, currentView]);
 
 
 
@@ -77,7 +94,7 @@ export function ListDocuments() {
             totalPages={totalPages}
             handlePageChange={handlePageChange}
             titleTable={`Solicitações de ${currentView === 'declaracao' ? `declaração` : `histórico`}`}
-            onDeleteDoc={() => deleteDoc(0)}
+            onDeleteDoc={handleDelete}
           />
         
       </div>

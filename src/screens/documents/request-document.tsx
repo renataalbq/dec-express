@@ -60,6 +60,7 @@ export function RequestDocument() {
         }),
       });
       const data = await response.json();
+      console.log(data, 'data')
       if (response.ok) {
         setDocumentId(data.document.id);
         setTimeout(() => {
@@ -74,7 +75,6 @@ export function RequestDocument() {
   };
 
   const downloadPdf = () => {
-    console.log(documentType, 'no download')
     if (documentType === 'declaracao') {
       window.open(`http://localhost:3000/documents/${documentId}/download`, '_blank');
     } else {
@@ -84,26 +84,47 @@ export function RequestDocument() {
     handleCloseModal();
   };
 
-  // const sendEmail = async () => {
-  //   if (documentId) {
-  //     try {
-  //       const response = await fetch(`http://localhost:3000/documents/${documentId}/send_email`, {
-  //         method: 'GET',
-  //       });
+  const sendEmail = async () => {
+    if (documentId) {
+      try {
+        const response = await fetch(`http://localhost:3000/documents/${documentId}/send_email`, {
+          method: 'GET',
+        });
         
-  //       const data = await response.json();
-  //       if (response.ok) {
-  //         setAlertMessage({ type: "success", message: "E-mail enviado com sucesso!" });
-  //         handleCloseModal();
-  //       } else {
-  //         setAlertMessage({ type: "error", message: "Erro ao enviar e-mail" });
-  //         console.error("Erro ao enviar e-mail:", data);
-  //       }
-  //     } catch (error) {
-  //       console.error('Erro ao enviar o email:', error);
-  //     }
-  //   }
-  // };
+        const data = await response.json();
+        if (response.ok) {
+          setAlertMessage({ type: "success", message: "E-mail enviado com sucesso!" });
+          handleCloseModal();
+        } else {
+          setAlertMessage({ type: "error", message: "Erro ao enviar e-mail" });
+          console.error("Erro ao enviar e-mail:", data);
+        }
+      } catch (error) {
+        console.error('Erro ao enviar o email:', error);
+      }
+    }
+  };
+
+  const sendEmailHist = async () => {
+    if (documentId) {
+      try {
+        const response = await fetch(`http://localhost:3000/documents/${documentId}/send_email_hist`, {
+          method: 'GET',
+        });
+        
+        const data = await response.json();
+        if (response.ok) {
+          setAlertMessage({ type: "success", message: "E-mail enviado com sucesso!" });
+          handleCloseModal();
+        } else {
+          setAlertMessage({ type: "error", message: "Erro ao enviar e-mail" });
+          console.error("Erro ao enviar e-mail:", data);
+        }
+      } catch (error) {
+        console.error('Erro ao enviar o email:', error);
+      }
+    }
+  };
 
   return (
     <Layout>
@@ -114,6 +135,7 @@ export function RequestDocument() {
       <ModalOptions
         onDownload={downloadPdf}
         onCancel={handleCloseModal}
+        onSendEmail={documentType == 'declaracao' ? sendEmail : sendEmailHist}
       />
     )}
     {alertMessage.message && (

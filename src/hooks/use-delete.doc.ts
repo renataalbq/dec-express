@@ -1,14 +1,15 @@
+import { useCallback } from 'react';
 import { useState } from 'react';
 
-function useDeleteDoc() {
+function useDeleteDoc(onSuccess: any) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const deleteDoc = async (id: number) => {
+  const deleteDoc = useCallback(async (docId: number) => {
     setIsLoading(true);
 
     try {
-      const response = await fetch(`http://localhost:3000/documents/${id}`, {
+      const response = await fetch(`http://localhost:3000/documents/${docId}`, {
         method: 'DELETE',
       });
 
@@ -16,12 +17,13 @@ function useDeleteDoc() {
         throw new Error('Erro ao deletar documento');
       }
 
+      onSuccess();
       setIsLoading(false);
     } catch (error) {
       setError('Erro ao deletar documento');
       setIsLoading(false);
     }
-  };
+  }, [onSuccess]);
 
   return { deleteDoc, isLoading, error };
 }

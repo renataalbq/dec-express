@@ -10,12 +10,16 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 export function RegisterStudent() {
   const navigate = useNavigate();
-  const { createStudent,isLoading, error } = useCreateStudent();
+  const { createStudent, isLoading, error } = useCreateStudent();
   const location = useLocation();
   const aluno = location?.state?.aluno;
-  const { updateStudent, isLoading: isLoadingUpdate, error: isErrorUpdate } = useUpdateStudent();
-  const [isUpdate, setIsUpdate] = useState(false)
-  const { classes } = useGetAllClasses(); 
+  const {
+    updateStudent,
+    isLoading: isLoadingUpdate,
+    error: isErrorUpdate,
+  } = useUpdateStudent();
+  const [isUpdate, setIsUpdate] = useState(false);
+  const { classes } = useGetAllClasses();
 
   useEffect(() => {
     if (aluno) {
@@ -24,10 +28,10 @@ export function RegisterStudent() {
         dataNascimento: aluno.dataNascimento,
         cpf: aluno.cpf,
         rg: aluno.rg,
-        telefone:  aluno.telefone,
-        email:  aluno.email,
-        matricula:  aluno.matricula,
-        turma:  aluno.turma,
+        telefone: aluno.telefone,
+        email: aluno.email,
+        matricula: aluno.matricula,
+        turma: aluno.turma,
         codTurma: aluno.codTurma,
         endereco: {
           cep: aluno.cep,
@@ -39,11 +43,10 @@ export function RegisterStudent() {
           complemento: aluno.complemento,
         },
       });
-      setIsUpdate(true)
+      setIsUpdate(true);
     }
   }, [aluno]);
-  
-  
+
   const [formData, setFormData] = useState({
     nome: "",
     dataNascimento: "",
@@ -67,7 +70,7 @@ export function RegisterStudent() {
       nivel: "",
       turma: "",
     },
-    codTurma: 0
+    codTurma: 0,
   });
 
   const [successMessage, setSuccessMessage] = useState("");
@@ -98,24 +101,30 @@ export function RegisterStudent() {
   };
 
   const handleSaveStudents = async () => {
-    if (!formData.nome || !formData.dataNascimento || !formData.telefone || !formData.email) {
+    if (
+      !formData.nome ||
+      !formData.dataNascimento ||
+      !formData.telefone ||
+      !formData.email
+    ) {
       setErrorMessage("Preencha todos os campos obrigatórios.");
     } else if (aluno) {
-      setErrorMessage(''); 
+      setErrorMessage("");
       await updateStudent(aluno.matricula, formData);
       if (!isErrorUpdate) {
         setSuccessMessage("Aluno alterado com sucesso");
         setTimeout(() => {
-          navigate('/list-students');
+          navigate("/list-students");
         }, 1000);
       }
     } else {
       setErrorMessage("");
       await createStudent(formData);
+      console.log(formData);
       if (!error) {
         setSuccessMessage("Aluno criado com sucesso");
         setTimeout(() => {
-          navigate('/list-students');
+          navigate("/list-students");
         }, 1000);
       }
     }
@@ -124,22 +133,25 @@ export function RegisterStudent() {
   return (
     <Layout>
       <div className="flex justify-between mb-4">
-      <h1 className="text-2xl font-semibold">{isUpdate ? 'Atualizar aluno' : 'Cadastrar novo aluno'}</h1>
+        <h1 className="text-2xl font-semibold">
+          {isUpdate ? "Atualizar aluno" : "Cadastrar novo aluno"}
+        </h1>
         <button
           onClick={handleSaveStudents}
           className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 py-2 rounded hover:from-blue-800 hover:to-blue-500"
         >
-        {isLoading || isLoadingUpdate ? 'Carregando...' : (isUpdate ? 'Atualizar aluno' : 'Salvar aluno')}
-
+          {isLoading || isLoadingUpdate
+            ? "Carregando..."
+            : isUpdate
+            ? "Atualizar aluno"
+            : "Salvar aluno"}
         </button>
       </div>
       <div className="bg-white p-6 shadow-md">
         {successMessage && (
           <AlertMessage type="success" message={successMessage} />
         )}
-        {errorMessage && (
-          <AlertMessage type="error" message={errorMessage} />
-        )}
+        {errorMessage && <AlertMessage type="error" message={errorMessage} />}
         <form className="space-y-4">
           <div className="flex space-x-4">
             <div className="w-1/2">
@@ -368,16 +380,17 @@ export function RegisterStudent() {
                   const selectedCodTurma = e.target.value;
                   setFormData({
                     ...formData,
-                    codTurma: Number(selectedCodTurma),
+                    codTurma: selectedCodTurma ? Number(selectedCodTurma) : 0,
                   });
                 }}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
-                disabled={!isUpdate}
+                disabled={!isUpdate && classes?.length === 0}
               >
                 <option value="">Selecione uma turma</option>
                 {classes?.map((turma) => (
-                  <option key={turma.codTurma} value={formData.codTurma}>
-                    {turma.serie}º Ano {turma.turma} - {nivel_format(turma.nivel)}
+                  <option key={turma.codTurma} value={turma.codTurma}>
+                    {turma.serie}º Ano {turma.turma} -{" "}
+                    {nivel_format(turma.nivel)}
                   </option>
                 ))}
               </select>

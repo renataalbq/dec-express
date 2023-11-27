@@ -15,7 +15,7 @@ const CardClass = (props: CardClassProps) => (
           <CardItem label="Série" value={`${props.turma.serie}º ano`} />
         </div>
         <div className="w-1/5">
-          <CardItem label="Turma" value={props.turma.turma} />
+          <CardItem label="Turma" value={props.turma.turma.toUpperCase()} />
         </div>
         <div className="w-1/5">
           <CardItem label="Nível" value={nivel_format(props.turma.nivel)} />

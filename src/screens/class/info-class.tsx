@@ -8,6 +8,7 @@ import { Layout } from "@/components/layout";
 import { nivel_format } from "@/utils/nivel-formatter";
 import useDeleteClass from "@/hooks/use-delete-class";
 import { IAluno } from "@/model/IAluno";
+import { toCapitalize } from "@/utils/capitalize-formatter";
 
 export function InfoClass() {
     const navigate = useNavigate();
@@ -106,10 +107,10 @@ export function InfoClass() {
               <tbody className="bg-gray-500 text-white text-center">
                 {filteredStudents.map((aluno: IAluno, index: number) => (
                   <tr key={index}>
-                    <td className="py-2 px-4">{aluno.nome}</td>
+                    <td className="py-2 px-4">{toCapitalize(aluno.nome)}</td>
                     <td className="py-2 px-4">{aluno.dataNascimento}</td>
                     <td className="py-2 px-4">{aluno.telefone}</td>
-                    <td className="py-2 px-4">{aluno.email}</td>
+                    <td className="py-2 px-4">{aluno.email.toLowerCase()}</td>
                     <td className="py-2 px-4">{aluno.matricula}</td>
                     <td className="py-2 px-4">{aluno.cpf}</td>
                   </tr>

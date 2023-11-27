@@ -3,8 +3,9 @@ import { BiSearch, BiTrash } from "react-icons/bi";
 import { Pagination } from "../pagination/pagination";
 import { SetStateAction } from "react";
 import { IDocuments } from "@/model/IDocuments";
+import { toCapitalize } from "@/utils/capitalize-formatter";
 
-interface DocuementsTableProps {
+interface DocumentsTableProps {
   searchQuery: string;
   handleSearchChange: (event: {target: {value: SetStateAction<string>;};}) => void;
   handleSortChange: (field: string) => void;
@@ -13,9 +14,10 @@ interface DocuementsTableProps {
   totalPages: number;
   handlePageChange: (newPage: SetStateAction<number>) => void;
   titleTable: string;
-  onDeleteDoc: () => void;
+  onDeleteDoc: (docId: number) => void;
 }
-export const DocumentsTable = (props: DocuementsTableProps) => {
+
+export const DocumentsTable = (props: DocumentsTableProps) => {
   return (
     <div className="bg-white shadow p-4">
       <div className="flex justify-between items-center">
@@ -57,7 +59,7 @@ export const DocumentsTable = (props: DocuementsTableProps) => {
         <tbody className="bg-gray-500 text-white text-center">
           {props.sortedDocuments?.map((document: any, index: number) => (
             <tr key={index}>
-              <td className="py-2 px-4">{document.nome_aluno}</td>
+              <td className="py-2 px-4">{toCapitalize(document.nome_aluno)}</td>
               <td className="py-2 px-4">{document.matricula}</td>
               <td className="py-2 px-4">
                 {date_format(document.data_solicitacao)}
@@ -65,7 +67,7 @@ export const DocumentsTable = (props: DocuementsTableProps) => {
               <td className="py-2 px-4">
                 {date_format(document.data_validade)}
               </td>
-              <td className="py-2 px-4 pl-14" onClick={props.onDeleteDoc}><BiTrash /></td>
+              <td className="py-2 px-4 pl-14 cursor-pointer" onClick={() => props.onDeleteDoc(document.id)}><BiTrash /></td>
             </tr>
           ))}
         </tbody>
