@@ -1,8 +1,8 @@
 import { DocumentsTable } from "@/components/documents-table/documents-table";
 import { Layout } from "@/components/layout";
 import { NavigationMenu } from "@/components/navigation-menu/navigation-menu";
-import useDeleteDoc from "@/hooks/use-delete.doc";
-import useGetDocumentsList from "@/hooks/use-get-documents";
+import useDeleteDoc from "@/hooks/documents/use-delete.doc";
+import useGetDocumentsList from "@/hooks/documents/use-get-documents";
 import { SetStateAction, useEffect, useMemo, useState } from "react";
 
 export function ListDocuments() {
@@ -37,7 +37,7 @@ export function ListDocuments() {
   
     return documents.filter(doc => 
       doc.tipo === currentView && 
-      (doc.nome_aluno.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (doc.nome_aluno?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       doc.matricula?.toString().includes(searchQuery))
     );
   }, [documents, currentView, searchQuery]);

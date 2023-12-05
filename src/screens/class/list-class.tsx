@@ -3,7 +3,7 @@ import { Layout } from "@/components/layout";
 import { Pagination } from "@/components/pagination/pagination";
 import ErrorPlaceholder from "@/components/placeholders/error";
 import LoadingPlaceholder from "@/components/placeholders/loading";
-import useGetAllClasses from "@/hooks/use-get-classes";
+import useGetAllClasses from "@/hooks/class/use-get-classes";
 import { ITurma } from "@/model/ITurma";
 import { Key, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

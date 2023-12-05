@@ -5,5 +5,6 @@ export type IDocuments = {
     tipo: string  | null;
     matricula?: string  | null;
     cpf: string;
-    nome_aluno: string;
+    nome_aluno: string | null | undefined;
+    grade_ids?: (number | undefined)[] | undefined
 }

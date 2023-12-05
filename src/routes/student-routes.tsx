@@ -13,7 +13,7 @@ export const StudentRoutes = createBrowserRouter([
     element: <Home />,
   },
   {
-    path: "/student-profile/:matricula",
+    path: "/student-profile",
     element: <StudentProfile />,
   },
   {

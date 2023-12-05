@@ -37,7 +37,7 @@ export const AdminRoutes = createBrowserRouter([
     element: <RegisterStudent />,
   },
   {
-    path: "/register-grade",
+    path: "/register-grade/:alunoId",
     element: <RegisterGrade />
   },
   {

@@ -6,7 +6,7 @@ import { SetStateAction, useState } from "react";
 import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
 import { Layout } from "@/components/layout";
 import { nivel_format } from "@/utils/nivel-formatter";
-import useDeleteClass from "@/hooks/use-delete-class";
+import useDeleteClass from "@/hooks/class/use-delete-class";
 import { IAluno } from "@/model/IAluno";
 import { toCapitalize } from "@/utils/capitalize-formatter";
 

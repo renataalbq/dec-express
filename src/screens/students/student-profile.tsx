@@ -1,18 +1,12 @@
-import { useNavigate } from "react-router-dom";
 import { Layout } from "@/components/layout";
-import useGetStudentByMatricula from "@/hooks/use-get-student-by-mat";
-import useGetStudentByEmail from "@/hooks/use-find-by-email";
+import useGetStudentByMatricula from "@/hooks/students/use-get-student-by-mat";
+import useGetStudentByEmail from "@/hooks/students/use-find-by-email";
 import { useAuth } from "@/store/auth.context";
 
 export function StudentProfile() {
-  const navigate = useNavigate();
   const { email } = useAuth();
   const { student: studentEmail } = useGetStudentByEmail(email);
   const { student } = useGetStudentByMatricula(studentEmail?.matricula || '');
-
-  const handleEditStudent = (student: any) => {
-    navigate(`/edit-profile/${student.matricula}`, {state: { student }});
-  };
 
  return (
   student &&
@@ -21,15 +15,7 @@ export function StudentProfile() {
         <div>
           <h1 className="text-2xl font-semibold">Aluno: {student.nome} </h1>
         </div>
-        <div className="flex gap-6">
-          <button
-            onClick={() => handleEditStudent(student)}
-            className="bg-gradient-to-r from-blue-500 to-blue-800 text-white px-4 rounded hover:from-blue-800 hover:to-blue-500"
-          >
-            Editar Perfil
-          </button>
-          
-        </div>
+
       </div>
       <hr className="mt-4" />
 

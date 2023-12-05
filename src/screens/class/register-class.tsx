@@ -1,7 +1,9 @@
 import { Layout } from "@/components/layout";
 import { AlertMessage } from "@/components/message/message";
-import useCreateClass from "@/hooks/use-create-class";
-import useUpdateClass from "@/hooks/use-update-class";
+import useCreateClass from "@/hooks/class/use-create-class";
+import useGetAllClasses from "@/hooks/class/use-get-classes";
+import useUpdateClass from "@/hooks/class/use-update-class";
+import { isNivel, seriesOptions } from "@/utils/nivel-formatter";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -12,6 +14,7 @@ export function RegisterClass() {
   const turma = location?.state?.turma;
   const { updateClass, isLoading: isLoadingUpdate, error: isErrorUpdate } = useUpdateClass();
   const [isUpdate, setIsUpdate] = useState(false)
+  const { classes } = useGetAllClasses()
 
   useEffect(() => {
     if (turma) {
@@ -24,6 +27,15 @@ export function RegisterClass() {
       setIsUpdate(true)
     }
   }, [turma]);
+
+  const isDuplicateClass = (ano: number, serie: number, nivel: string, turma: string) => {
+    return classes?.some(classe => 
+      classe.ano === ano && 
+      classe.serie === serie && 
+      classe.nivel === nivel && 
+      classe.turma === turma
+    );
+  };
   
   const [formData, setFormData] = useState({
     ano: 0,
@@ -58,12 +70,18 @@ export function RegisterClass() {
     }
     else {
       setErrorMessage(''); 
-      await createClass(formData);
-      if (!error) {
-        setSuccessMessage("Turma criada com sucesso");
-        setTimeout(() => {
-          navigate('/list-class');
-        }, 1000);
+      if (isDuplicateClass(formData.ano, formData.serie, formData.nivel, formData.turma)) {
+        setErrorMessage('Já existe uma turma com as mesmas características.');
+        return;
+      }
+      else {
+        await createClass(formData);
+        if (!error) {
+          setSuccessMessage("Turma criada com sucesso");
+          setTimeout(() => {
+            navigate('/list-class');
+          }, 1000);
+        }
       }
     }
   };
@@ -108,27 +126,21 @@ export function RegisterClass() {
               </select>
             </div>
             <div className="w-1/2">
-              <label htmlFor="serie" className="block font-semibold">
-                Série: <span className="text-red-500">*</span>
+            <label htmlFor="nivel" className="block font-semibold">
+                Nível: <span className="text-red-500">*</span>
               </label>
               <select
-                id="serie"
-                name="serie"
-                value={formData.serie}
+                id="nivel"
+                name="nivel"
+                value={formData.nivel}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
                 disabled={isUpdate}
               >
-                <option value={undefined}>Selecione a série </option>
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-                <option value={4}>4</option>
-                <option value={5}>5</option>
-                <option value={6}>6</option>
-                <option value={7}>7</option>
-                <option value={8}>8</option>
-                <option value={9}>9</option>
+                <option value="">Selecionar nível</option>
+                <option value="ENSINO_FUNDAMENTAL_I">Ensino Fundamental I</option>
+                <option value="ENSINO_FUNDAMENTAL_II">Ensino Fundamental II</option>
+                <option value="ENSINO_MEDIO">Ensino Médio</option>
               </select>
             </div>
           </div>
@@ -149,21 +161,21 @@ export function RegisterClass() {
               />
             </div>
             <div className="w-1/2">
-              <label htmlFor="nivel" className="block font-semibold">
-                Nível: <span className="text-red-500">*</span>
+            <label htmlFor="serie" className="block font-semibold">
+                Série: <span className="text-red-500">*</span>
               </label>
               <select
-                id="nivel"
-                name="nivel"
-                value={formData.nivel}
+                id="serie"
+                name="serie"
+                value={formData.serie}
                 onChange={handleInputChange}
                 className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
                 disabled={isUpdate}
               >
-                <option value="">Selecionar nível</option>
-                <option value="ENSINO_FUNDAMENTAL_I">Ensino Fundamental I</option>
-                <option value="ENSINO_FUNDAMENTAL_II">Ensino Fundamental II</option>
-                <option value="ENSINO_MEDIO">Ensino Médio</option>
+               <option value={undefined}>Selecione a série</option>
+                  {isNivel(formData.nivel) ? seriesOptions[formData.nivel].map(serie => (
+                    <option key={serie} value={serie}>{serie}</option>
+                  )) : null}
               </select>
             </div>
           </div>

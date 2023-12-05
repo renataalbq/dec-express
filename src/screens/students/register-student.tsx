@@ -1,12 +1,13 @@
 import { Layout } from "@/components/layout";
 import { AlertMessage } from "@/components/message/message";
-import useCreateStudent from "@/hooks/use-create-student";
-import useGetAllClasses from "@/hooks/use-get-classes";
-import useUpdateStudent from "@/hooks/use-update-student";
+import useCreateStudent from "@/hooks/students/use-create-student";
+import useGetAllClasses from "@/hooks/class/use-get-classes";
+import useUpdateStudent from "@/hooks/students/use-update-student";
 import { date_format } from "@/utils/date-formatter";
 import { nivel_format } from "@/utils/nivel-formatter";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import useGetAllStudents from "@/hooks/students/use-get-students";
 
 export function RegisterStudent() {
   const navigate = useNavigate();
@@ -20,6 +21,7 @@ export function RegisterStudent() {
   } = useUpdateStudent();
   const [isUpdate, setIsUpdate] = useState(false);
   const { classes } = useGetAllClasses();
+  const { students } = useGetAllStudents();
 
   useEffect(() => {
     if (aluno) {
@@ -76,6 +78,15 @@ export function RegisterStudent() {
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
 
+  const isDuplicateStudent = (cpf: string, rg: string, matricula: string, email: string) => {
+    return students?.some(student => 
+      student.cpf === cpf || 
+      student.rg === rg || 
+      student.email === email ||
+      (matricula && student.matricula === matricula)
+    );
+  };
+
   const handleInputChange = (e: { target: { name: any; value: any } }) => {
     const { name, value } = e.target;
     if (name === "dataNascimento") {
@@ -108,6 +119,9 @@ export function RegisterStudent() {
       !formData.email
     ) {
       setErrorMessage("Preencha todos os campos obrigatórios.");
+    } else if (!formData.cpf || formData.cpf.length !== 11) {
+      setErrorMessage("O CPF deve ter 11 dígitos.");
+      return;
     } else if (aluno) {
       setErrorMessage("");
       await updateStudent(aluno.matricula, formData);
@@ -118,9 +132,13 @@ export function RegisterStudent() {
         }, 1000);
       }
     } else {
-      setErrorMessage("");
-      await createStudent(formData);
-      console.log(formData);
+      if (isDuplicateStudent(formData.cpf, formData.rg, formData.matricula, formData.email)) {
+        setErrorMessage('Já existe um estudante com os mesmos dados (CPF, RG, Matrícula ou Email).');
+        return;
+      } else {
+        setErrorMessage("");
+        await createStudent(formData);
+      }
       if (!error) {
         setSuccessMessage("Aluno criado com sucesso");
         setTimeout(() => {

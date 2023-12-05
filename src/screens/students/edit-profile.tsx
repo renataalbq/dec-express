@@ -1,7 +1,7 @@
 import { Layout } from "@/components/layout";
 import { AlertMessage } from "@/components/message/message";
-import useGetAllClasses from "@/hooks/use-get-classes";
-import useUpdateStudent from "@/hooks/use-update-student";
+import useGetAllClasses from "@/hooks/class/use-get-classes";
+import useUpdateStudent from "@/hooks/students/use-update-student";
 import { date_format } from "@/utils/date-formatter";
 import { nivel_format } from "@/utils/nivel-formatter";
 import { useEffect, useState } from "react";

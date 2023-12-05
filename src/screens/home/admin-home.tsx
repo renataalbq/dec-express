@@ -3,9 +3,9 @@ import { GiTeacher } from "react-icons/gi";
 import { HiOutlineDocumentDownload } from "react-icons/hi";
 import { chartData, chartOptions } from "@/components/charts/charts-options";
 import BarChart from "@/components/charts/bar-chart";
-import useGetAllStudents from "@/hooks/use-get-students";
-import useGetAllClasses from "@/hooks/use-get-classes";
-import useGetDocumentsList from "@/hooks/use-get-documents";
+import useGetAllStudents from "@/hooks/students/use-get-students";
+import useGetAllClasses from "@/hooks/class/use-get-classes";
+import useGetDocumentsList from "@/hooks/documents/use-get-documents";
 
 const AdminHome = () => {
   const {students} = useGetAllStudents();

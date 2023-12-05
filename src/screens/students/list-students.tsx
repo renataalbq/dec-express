@@ -3,7 +3,7 @@ import { Layout } from "@/components/layout";
 import { Pagination } from "@/components/pagination/pagination";
 import ErrorPlaceholder from "@/components/placeholders/error";
 import LoadingPlaceholder from "@/components/placeholders/loading";
-import useGetAllStudents from "@/hooks/use-get-students";
+import useGetAllStudents from "@/hooks/students/use-get-students";
 import { IAluno } from "@/model/IAluno";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";

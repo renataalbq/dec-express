@@ -1,6 +1,6 @@
 import { AlertMessage } from "@/components/message/message";
 import { ModalAlert } from "@/components/modal-alert/modal-alert";
-import useCreateStudent from "@/hooks/use-create-student";
+import useCreateStudent from "@/hooks/students/use-create-student";
 import { date_format } from "@/utils/date-formatter";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";

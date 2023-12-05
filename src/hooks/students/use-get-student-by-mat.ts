@@ -10,7 +10,7 @@ function useGetStudentByMatricula(matricula: string) {
     useEffect(() => {
       setIsLoading(true);
   
-      authorizedFetch(`http://localhost:8080/decexpress/aluno/${matricula}`, {
+      authorizedFetch(`http://localhost:8080/decexpress/aluno/matricula/${matricula}`, {
         method: 'GET',
       })
         .then((response) => {

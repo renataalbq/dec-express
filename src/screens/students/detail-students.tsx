@@ -3,9 +3,9 @@ import { FaTrashCan } from "react-icons/fa6";
 import { useState } from "react";
 import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
 import { Layout } from "@/components/layout";
-import useDeleteStudents from "@/hooks/use-delete-student";
+import useDeleteStudents from "@/hooks/students/use-delete-student";
 import { nivel_format } from "@/utils/nivel-formatter";
-import useGetStudentByMatricula from "@/hooks/use-get-student-by-mat";
+import useGetStudentByMatricula from "@/hooks/students/use-get-student-by-mat";
 
 export function DetailStudents() {
   const navigate = useNavigate();
@@ -31,8 +31,9 @@ export function DetailStudents() {
     setIsModalOpen(false);
   };
 
-  const handleRegisterGrades = () => {
-    navigate('/register-grade')
+  const handleRegisterGrades = (aluno: any) => {
+    navigate(`/register-grade/${aluno.matricula}`, {state: { aluno }});
+
   }
 
   return (
@@ -131,8 +132,8 @@ export function DetailStudents() {
         </div>
         <div className="mt-6">
         <button
-          onClick={handleRegisterGrades}
-          className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-4 py-2 rounded hover:from-blue-800 hover:to-blue-500"
+          onClick={() => handleRegisterGrades(student)}
+          className="bg-gradient-to-r w-70  from-blue-500 to-blue-700 text-white px-4 py-2 rounded hover:from-blue-800 hover:to-blue-500"
         >Registrar notas do aluno</button>
         </div>
       </div>

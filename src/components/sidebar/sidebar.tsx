@@ -115,7 +115,7 @@ const Sidebar = (props: SidebarProps)  => {
             <>
               <SidebarItem icon={<IoDocumentTextOutline />} text={'Documentos'} active={location.pathname.includes('document')} link='/request-document' />
               <SidebarItem icon={<FaPeopleRoof />} text={'Sua turma'} active={location.pathname.includes('class')} link='/student-class' />
-              <SidebarItem icon={<PiStudentDuotone />} text={'Perfil'} active={location.pathname.includes('profile')} link={`/student-profile/:matricula`} />
+              <SidebarItem icon={<PiStudentDuotone />} text={'Perfil'} active={location.pathname.includes('profile')} link={`/student-profile`} />
             </>}
           </ul>
           <ul

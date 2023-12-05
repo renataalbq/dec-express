@@ -2,7 +2,9 @@ import { DocumentCard } from '@/components/document-card/document-card';
 import { Layout } from '@/components/layout';
 import { AlertMessage, AlertMessageProps } from '@/components/message/message';
 import { ModalOptions } from '@/components/modal-options/modal-options';
-import useGetStudentByEmail from '@/hooks/use-find-by-email';
+import useGetGrades from '@/hooks/grades/use-get-grades';
+import useGetStudentByEmail from '@/hooks/students/use-find-by-email';
+import { IDocuments } from '@/model/IDocuments';
 import { useAuth } from '@/store/auth.context';
 import { useState } from 'react';
 
@@ -13,6 +15,7 @@ export function RequestDocument() {
   const { student } = useGetStudentByEmail(email)
   const [alertMessage, setAlertMessage] = useState<AlertMessageProps>({ type: "success", message: "" });
   const [documentType, setDocumentType] = useState('');
+  const {grades} = useGetGrades();
 
   const formatDate = (date: string | number | Date) => {
     let d = new Date(date),
@@ -36,6 +39,7 @@ export function RequestDocument() {
     setShowModal(false);
   };
 
+  const gradeIds = grades?.map(grade => grade.id);
 
   const createDocument = async (type: string) => {
     const dataAtual = new Date();
@@ -43,21 +47,25 @@ export function RequestDocument() {
     dataValidade.setMonth(dataValidade.getMonth() + 4);
     setDocumentType(type);
 
+    const requestBody: IDocuments = {
+      data_solicitacao: formatDate(dataAtual), 
+      data_validade: formatDate(dataValidade), 
+      tipo: documentType,
+      matricula: student?.matricula,
+      cpf: student?.cpf ? student.cpf : '',
+      nome_aluno: student?.nome,
+      email_aluno: student?.email,
+      grade_ids: gradeIds,
+    }
+    console.log(requestBody)
+    
     try {
       const response = await fetch('http://localhost:3000/documents', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          data_solicitacao: formatDate(dataAtual), 
-          data_validade: formatDate(dataValidade), 
-          tipo: documentType,
-          matricula: student?.matricula,
-          cpf: student?.cpf ? student.cpf : '',
-          nome_aluno: student?.nome,
-          email_aluno: student?.email
-        }),
+        body: JSON.stringify(requestBody),
       });
       const data = await response.json();
       console.log(data, 'data')

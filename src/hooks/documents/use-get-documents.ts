@@ -20,7 +20,7 @@ function useGetDocumentsList(page: number) {
         setTotalPages(data.total_pages);
         setIsLoading(false);
       })
-      .catch(() => {
+    .catch(() => {
         setError('Ocorreu um erro ao buscar documentos');
         setIsLoading(false);
       });
