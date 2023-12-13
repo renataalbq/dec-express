@@ -4,33 +4,23 @@ import useCreateGrade from "@/hooks/grades/use-create-grade";
 import useDeleteGrade from "@/hooks/grades/use-delete-grade";
 import useGetGrades from "@/hooks/grades/use-get-grades";
 import useUpdateGrade from "@/hooks/grades/use-update-grade";
+import useGetAllSubjects from "@/hooks/teachers-subjects/use-get-subjects";
+import useGetAllTeachers from "@/hooks/teachers-subjects/use-get-teachers";
 import { useState } from "react";
 import { BiEdit, BiTrash } from "react-icons/bi";
 import { useLocation } from "react-router-dom";
 
 const RegisterGrade = () => {
-  const [disciplinasDisponiveis, setDisciplinasDisponiveis] = useState([
-    "Matemática",
-    "Português",
-    "História",
-    "Biologia", "Química", "Física", "Geografia",
-  ]);
-  const [professores, setProfessores] = useState([
-    "João Silva",
-    "Bruna",
-    "Rafael",
-    "Matheus",
-    "Lucas",
-    "Larissa",
-  ]);
   
   const { createGrade } = useCreateGrade();
-  const { grades, refetch } = useGetGrades();
   const location = useLocation();
   const { aluno } = location.state;
   const { updateGrade } = useUpdateGrade();
+  const { grades, refetch } = useGetGrades(aluno.email);
   const [isUpdate, setIsUpdate] = useState(false);
   const [idEdit, setIdEdit] = useState<number | null>(null);
+  const { teachers } = useGetAllTeachers()
+  const { subjects } = useGetAllSubjects();
   const [formularioAtual, setFormularioAtual] = useState({
     bimestre: 0,
     professor: "",
@@ -38,9 +28,8 @@ const RegisterGrade = () => {
     nota: 0.0,
     nome: aluno.nome,
     matricula: aluno.matricula,
+    email: aluno.email
   });
-
-  console.log(setProfessores)
 
   const [alertMessage, setAlertMessage] = useState<AlertMessageProps>({ type: "error", message: "" });
 
@@ -59,10 +48,8 @@ const RegisterGrade = () => {
 
     setFormularioAtual({ ...formularioAtual, [name]: updatedValue });
 
-    if (name === 'bimestre') {
-      updateAvailableSubjects();
-    }
   };
+
   const handleEdit = (grade: any) => {
     setFormularioAtual({
       bimestre: grade.bimestre,
@@ -71,6 +58,7 @@ const RegisterGrade = () => {
       nota: grade.nota,
       nome: grade.nome,
       matricula: grade.matricula,
+      email: grade.email
     });
     setIsUpdate(true);
     setIdEdit(grade.id);
@@ -81,42 +69,31 @@ const RegisterGrade = () => {
       setAlertMessage({ type: "error", message: "Preencha todos os campos obrigatórios." });
       return;
     }
-    setFormularioAtual({
-      ...formularioAtual,
-      disciplina: "",
-      nota: 0,
-      professor: "",
-      nome: aluno?.nome,
-      matricula: aluno?.matricula,
-      bimestre: 0
-    });
-
+  
     const notaExistente = grades?.find(grade => 
       grade.bimestre === formularioAtual.bimestre &&
       grade.disciplina === formularioAtual.disciplina &&
-      grade.matricula === formularioAtual.matricula
+      grade.matricula === formularioAtual.matricula &&
+      (!isUpdate || grade.id !== idEdit)
     );
   
-    if (notaExistente && !isUpdate) {
-      setAlertMessage({ type: "error", message: "Nota já registrada para esta disciplina e bimestre." });
+    if (notaExistente) {
+      setAlertMessage({ type: "error", message: "Nota já registrada para esta disciplina e bimestre. Edite ou exclua a nota existente." });
       return;
-    }
-
-    if (isUpdate && idEdit !== null){
+    } 
+  
+    if (isUpdate && idEdit !== null) {
       await updateGrade(idEdit, { ...formularioAtual, nota: formularioAtual.nota });
       setIsUpdate(false);
       setIdEdit(null);
+    } else {
+      await createGrade(formularioAtual);
     }
-    else {
-      await createGrade(formularioAtual)
-    }
-    setDisciplinasDisponiveis(
-      disciplinasDisponiveis.filter((d) => d !== formularioAtual.disciplina)
-    );
-    refetch();
+  
+    refetch();  
     resetFormulario();
-    updateAvailableSubjects();
   };
+  
 
   const resetFormulario = () => {
     setFormularioAtual({
@@ -126,21 +103,8 @@ const RegisterGrade = () => {
       nota: 0.0,
       nome: aluno.nome,
       matricula: aluno.matricula,
+      email: aluno.email
     });
-  };
-
-  const updateAvailableSubjects = () => {
-    const bimestreSelecionado = formularioAtual.bimestre;
-  
-    const disciplinasNaoDisponiveis = grades && grades
-      .filter((grade) => grade.bimestre === bimestreSelecionado && grade.matricula === aluno?.matricula)
-      .map((grade) => grade.disciplina);
-
-    setDisciplinasDisponiveis(
-      ["Matemática", "Português", "Biologia", "Química", "Física", "Geografia", "História"].filter(
-        (disciplina) => !disciplinasNaoDisponiveis?.includes(disciplina)
-      )
-    );
   };
 
   return (
@@ -187,9 +151,9 @@ const RegisterGrade = () => {
             required={!isUpdate}
           >
             <option value="">Selecione um professor</option>
-            {professores.map((professor) => (
-              <option key={professor} value={professor}>
-                {professor}
+            {teachers && teachers?.map((professor: any, index: number) => (
+              <option key={index} value={professor.name}>
+                {professor.name}
               </option>
             ))}
           </select>
@@ -208,9 +172,9 @@ const RegisterGrade = () => {
             required={!isUpdate}
           >
             <option value="">Selecione uma disciplina</option>
-            {disciplinasDisponiveis.map((disciplina) => (
-              <option key={disciplina} value={disciplina}>
-                {disciplina}
+            {subjects && subjects?.map((disciplina: any, index: number) => (
+              <option key={index} value={disciplina.name}>
+                {disciplina.name}
               </option>
             ))}
           </select>
@@ -253,7 +217,7 @@ const RegisterGrade = () => {
             </tr>
           </thead>
           <tbody className="bg-gray-500 text-white text-center">
-            {grades?.map((grade: any, index: number) => (
+            {grades ? grades?.map((grade: any, index: number) => (
               <tr key={index}>
                 <td className="py-2 px-4">{grade.nome}</td>
                 <td className="py-2 px-4">{grade.matricula}</td>
@@ -274,7 +238,7 @@ const RegisterGrade = () => {
                   <BiTrash />
                 </td>
               </tr>
-            ))}
+            )) : null}
           </tbody>
         </table>
       </div>

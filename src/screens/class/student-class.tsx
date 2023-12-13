@@ -1,4 +1,8 @@
 import { Layout } from "@/components/layout";
+import useGetStudentByEmail from "@/hooks/students/use-find-by-email";
+import useGetStudentByMatricula from "@/hooks/students/use-get-student-by-mat";
+import { useAuth } from "@/store/auth.context";
+import { toCapitalize } from "@/utils/capitalize-formatter";
 import { nivel_format } from "@/utils/nivel-formatter";
 
 const horarios = [
@@ -11,13 +15,15 @@ const horarios = [
 ]
 
 export function StudentClass() {
-
+  const { email } = useAuth();
+  const { student: studentEmail } = useGetStudentByEmail(email);
+  const { student } = useGetStudentByMatricula(studentEmail?.matricula || '');
   return (
     <Layout>
           <div className="flex justify-between">
             <div>
-            <h1 className="text-2xl font-semibold">Turma: 1º Ano A - {nivel_format('ENSINO_MEDIO')}</h1>
-            <p className="text-sm text-neutral-500">Informações da turma: 1º Ano A - {nivel_format('ENSINO_MEDIO')} ({'2023'})</p>
+            <h1 className="text-2xl font-semibold">Turma: {student?.turma?.serie}º Ano {toCapitalize(student?.turma?.turma || '')} - {nivel_format(student?.turma?.nivel || '')}</h1>
+            <p className="text-sm text-neutral-500">Informações da turma: {student?.turma?.serie}º Ano {toCapitalize(student?.turma?.turma || '')} - {nivel_format(student?.turma?.nivel || '')} ({student?.turma?.ano})</p>
             </div>
           </div>
           <hr className="mt-4" />

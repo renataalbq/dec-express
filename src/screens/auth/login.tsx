@@ -15,7 +15,7 @@ const { login } = useAuth();
   const handleSignUp = () => {
     navigate("/signup");
   };
-
+  
   const handleLogin = async (event: { preventDefault: () => void; }) => {
     event.preventDefault();
     setError('');

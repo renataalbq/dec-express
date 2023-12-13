@@ -15,7 +15,7 @@ export function RequestDocument() {
   const { student } = useGetStudentByEmail(email)
   const [alertMessage, setAlertMessage] = useState<AlertMessageProps>({ type: "success", message: "" });
   const [documentType, setDocumentType] = useState('');
-  const {grades} = useGetGrades();
+  const {grades} = useGetGrades(student?.email || '');
 
   const formatDate = (date: string | number | Date) => {
     let d = new Date(date),
@@ -32,6 +32,7 @@ export function RequestDocument() {
   };
 
   const handleOpenModal = () => {
+    console.log(showModal)
     setShowModal(true);
   };
 
@@ -46,7 +47,6 @@ export function RequestDocument() {
     const dataValidade = new Date(dataAtual);
     dataValidade.setMonth(dataValidade.getMonth() + 4);
     setDocumentType(type);
-
     const requestBody: IDocuments = {
       data_solicitacao: formatDate(dataAtual), 
       data_validade: formatDate(dataValidade), 
@@ -57,8 +57,7 @@ export function RequestDocument() {
       email_aluno: student?.email,
       grade_ids: gradeIds,
     }
-    console.log(requestBody)
-    
+
     try {
       const response = await fetch('http://localhost:3000/documents', {
         method: 'POST',
@@ -68,12 +67,13 @@ export function RequestDocument() {
         body: JSON.stringify(requestBody),
       });
       const data = await response.json();
-      console.log(data, 'data')
+      console.log(requestBody)
+
       if (response.ok) {
         setDocumentId(data.document.id);
         setTimeout(() => {
-          handleOpenModal();
-        }, 2000);
+            handleOpenModal();
+        }, 1000);
       } else {
         console.error("Erro ao criar documento:", data);
       }
@@ -140,12 +140,13 @@ export function RequestDocument() {
     <section>
       <h2 className="text-2xl font-semibold">Documentos</h2>
       {showModal && (
-      <ModalOptions
-        onDownload={downloadPdf}
-        onCancel={handleCloseModal}
-        onSendEmail={documentType == 'declaracao' ? sendEmail : sendEmailHist}
-      />
-    )}
+        <ModalOptions
+          onDownload={downloadPdf}
+          onCancel={handleCloseModal}
+          onSendEmail={documentType === 'declaracao' ? sendEmail : sendEmailHist}
+          loadingMessage={documentType === 'declaracao' ? 'Declaração' : 'Histórico'}
+        />
+      )}
     {alertMessage.message && (
         <AlertMessage type={alertMessage.type} message={alertMessage.message} />
       )}

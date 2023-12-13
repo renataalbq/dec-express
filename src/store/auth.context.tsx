@@ -1,6 +1,11 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
-import { jwtDecode } from 'jwt-decode';
-import { IPayload } from '@/model/IPayload';
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import {jwtDecode} from 'jwt-decode';
+
+interface IPayload {
+  isAdmin: boolean;
+  name: string;
+  email: string;
+}
 
 interface AuthContextType {
   token: string | null;
@@ -11,7 +16,7 @@ interface AuthContextType {
   logout: () => void;
 }
 
-const AuthContext = createContext<AuthContextType>({} as AuthContextType); // Removido o null para simplificar a verificação
+const AuthContext = createContext<AuthContextType>(null!); // Usando 'null!' para simplificar a inicialização
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -22,64 +27,69 @@ export const useAuth = () => {
 };
 
 interface AuthProviderProps {
-  children: ReactNode;
+  children: React.ReactNode;
 }
 
-const initializeAuthState = (): AuthContextType => {
-  const token = localStorage.getItem('token');
-  if (token) {
-    try {
-      const decoded: IPayload = jwtDecode(token);
-      return {
-        token,
-        isAdmin: decoded.isAdmin,
-        name: decoded.name,
-        email: decoded.email,
-        login: () => {},
-        logout: () => {},
-      };
-
-    } catch (error) {
-      localStorage.removeItem('token');
-    }
-  }
-  return {
-    token: null,
-    isAdmin: false,
-    name: '',
-    email: '',
-    login: () => {},
-    logout: () => {},
-  };
-};
-
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
+  const initializeAuthState = (): AuthContextType => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        const decoded: IPayload = jwtDecode(token);
+        return {
+          token,
+          isAdmin: decoded.isAdmin,
+          name: decoded.name,
+          email: decoded.email,
+          login: () => {},
+          logout: () => {},
+        };
+      } catch (error) {
+        localStorage.clear();
+      }
+    }
+    return {
+      token: null,
+      isAdmin: false,
+      name: '',
+      email: '',
+      login: () => {},
+      logout: () => {},
+    };
+  };
+
   const [authState, setAuthState] = useState<AuthContextType>(initializeAuthState());
+
+  const login = (newToken: string) => {
+    const decoded: IPayload = jwtDecode(newToken);
+    localStorage.setItem('token', newToken);
+    setAuthState({
+      token: newToken,
+      isAdmin: decoded.isAdmin,
+      name: decoded.name,
+      email: decoded.email,
+      login,
+      logout,
+    });
+  };
+
+  const logout = () => {
+    localStorage.clear();
+    setAuthState({
+      token: null,
+      isAdmin: false,
+      name: '',
+      email: '',
+      login,
+      logout,
+    });
+  };
 
   useEffect(() => {
     setAuthState((prevState) => ({
       ...prevState,
-      login: (newToken: string) => {
-        const decoded: IPayload = jwtDecode(newToken);
-        localStorage.setItem('token', newToken);
-        setAuthState({
-          ...prevState,
-          token: newToken,
-          isAdmin: decoded.isAdmin,
-          name: decoded.name,
-          email: decoded.email,
-        });
-      },
-      logout: () => {
-        localStorage.removeItem('token');
-        setAuthState({
-          ...prevState,
-          token: null,
-          isAdmin: false,
-          name: '',
-          email: '',
-        });
-      },
+      login,
+      logout,
     }));
   }, []);
 
