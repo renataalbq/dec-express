@@ -32,7 +32,6 @@ export function RequestDocument() {
   };
 
   const handleOpenModal = () => {
-    console.log(showModal)
     setShowModal(true);
   };
 
@@ -47,10 +46,12 @@ export function RequestDocument() {
     const dataValidade = new Date(dataAtual);
     dataValidade.setMonth(dataValidade.getMonth() + 4);
     setDocumentType(type);
+    console.log(documentId)
+
     const requestBody: IDocuments = {
       data_solicitacao: formatDate(dataAtual), 
       data_validade: formatDate(dataValidade), 
-      tipo: documentType,
+      tipo: type,
       matricula: student?.matricula,
       cpf: student?.cpf ? student.cpf : '',
       nome_aluno: student?.nome,
@@ -70,6 +71,7 @@ export function RequestDocument() {
       console.log(requestBody)
 
       if (response.ok) {
+        console.log(data)
         setDocumentId(data.document.id);
         setTimeout(() => {
             handleOpenModal();
