@@ -18,7 +18,7 @@ const ConfirmationModal = (props: ConfirmationModalProps) => {
           >
             <AiOutlineClose />
           </button>
-          <p className="text-lg font-semibold mb-4">
+          <p className="text-lg font-semibold mb-4 text-black">
             Tem certeza que deseja deletar {props.entityName}{" "}
             <span className="text-blue-700">
                 {props.text}

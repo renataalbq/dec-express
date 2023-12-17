@@ -1,8 +1,11 @@
 import { Layout } from "@/components/layout";
 import { AlertMessage } from "@/components/message/message";
+import ErrorPlaceholder from "@/components/placeholders/error";
+import LoadingPlaceholder from "@/components/placeholders/loading";
 import useCreateClass from "@/hooks/class/use-create-class";
 import useGetAllClasses from "@/hooks/class/use-get-classes";
 import useUpdateClass from "@/hooks/class/use-update-class";
+import { useServerAvailable } from "@/hooks/use-server-available";
 import { isNivel, seriesOptions } from "@/utils/nivel-formatter";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -15,6 +18,7 @@ export function RegisterClass() {
   const { updateClass, isLoading: isLoadingUpdate, error: isErrorUpdate } = useUpdateClass();
   const [isUpdate, setIsUpdate] = useState(false)
   const { classes } = useGetAllClasses()
+  const serverOn = useServerAvailable('http://localhost:8080/decexpress/turma');
 
   useEffect(() => {
     if (turma) {
@@ -76,7 +80,10 @@ export function RegisterClass() {
       }
       else {
         await createClass(formData);
-        if (!error) {
+        if (error) {
+          setErrorMessage("Não foi possível criar turma")
+        }
+        else if (!error) {
           setSuccessMessage("Turma criada com sucesso");
           setTimeout(() => {
             navigate('/list-class');
@@ -86,9 +93,12 @@ export function RegisterClass() {
     }
   };
 
-
   return (
     <Layout>
+        {serverOn === null ? <LoadingPlaceholder /> :
+        !serverOn ? <ErrorPlaceholder error={'Servidor indisponível'} />
+        :
+        <>
       <div className="flex justify-between mb-4">
         <h1 className="text-2xl font-semibold">{isUpdate ? 'Atualizar turma' : 'Cadastrar nova turma'}</h1>
         <button
@@ -181,6 +191,7 @@ export function RegisterClass() {
           </div>
         </form>
       </div>
+      </>}
     </Layout>
   );
 }

@@ -1,7 +1,6 @@
 import { PiStudentFill } from "react-icons/pi";
 import { GiTeacher } from "react-icons/gi";
 import { HiOutlineDocumentDownload } from "react-icons/hi";
-import { chartData, chartOptions } from "@/components/charts/charts-options";
 import BarChart from "@/components/charts/bar-chart";
 import useGetAllStudents from "@/hooks/students/use-get-students";
 import useGetAllClasses from "@/hooks/class/use-get-classes";
@@ -10,8 +9,11 @@ import useGetDocumentsList from "@/hooks/documents/use-get-documents";
 const AdminHome = () => {
   const {students} = useGetAllStudents();
   const {classes} = useGetAllClasses();
-  const {documents} = useGetDocumentsList(1)
+  const {documents} = useGetDocumentsList()
 
+  const totalDeclaracoes = documents?.filter(doc => doc.tipo === 'declaracao').length || 0;
+  const totalHistoricos = documents?.filter(doc => doc.tipo === 'historico').length || 0;
+  console.log(documents)
   return (
     <div>
       <section>
@@ -44,7 +46,7 @@ const AdminHome = () => {
               Total de declarações
             </h3>
             <div className="mt-8">
-              <span className="text-slate-500 text-4xl font-semibold">{documents?.length}</span>
+              <span className="text-slate-500 text-4xl font-semibold">{totalDeclaracoes}</span>
             </div>
           </div>
           <div className="w-full md:w-64 h-52 shadow-md p-2 bg-white rounded-lg flex flex-col mb-4 md:mb-0">
@@ -57,7 +59,7 @@ const AdminHome = () => {
               Total de históricos
             </h3>
             <div className="mt-8">
-              <span className="text-slate-500 text-4xl font-semibold">{documents?.length}</span>
+              <span className="text-slate-500 text-4xl font-semibold">{totalHistoricos}</span>
             </div>
           </div>
         </div>
@@ -68,7 +70,7 @@ const AdminHome = () => {
           <h3 className="text-lg font-semibold mb-2">
             Total de alunos por turma
           </h3>
-          <BarChart chartData={chartData} chartOptions={chartOptions} />
+          {classes && <BarChart classes={classes} />}
         </div>
       </section>
     </div>

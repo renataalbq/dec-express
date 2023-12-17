@@ -1,9 +1,10 @@
 import { date_format } from "@/utils/date-formatter";
 import { BiSearch, BiTrash } from "react-icons/bi";
 import { Pagination } from "../pagination/pagination";
-import { SetStateAction } from "react";
+import { SetStateAction, useState } from "react";
 import { IDocuments } from "@/model/IDocuments";
 import { toCapitalize } from "@/utils/capitalize-formatter";
+import { ConfirmationModal } from "../modal-confirmation/modal-confirmation";
 
 interface DocumentsTableProps {
   searchQuery: string;
@@ -18,6 +19,18 @@ interface DocumentsTableProps {
 }
 
 export const DocumentsTable = (props: DocumentsTableProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedDocument, setSelectedDocument] = useState<IDocuments | null>(null);
+
+  const handleCancelDelete = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleOpenModal = (document: IDocuments) => {
+    setSelectedDocument(document);
+    setIsModalOpen(true);
+  };
+  
   return (
     <div className="bg-white shadow p-4">
       <div className="flex justify-between items-center">
@@ -67,7 +80,7 @@ export const DocumentsTable = (props: DocumentsTableProps) => {
               <td className="py-2 px-4">
                 {date_format(document.data_validade)}
               </td>
-              <td className="py-2 px-4 pl-14 cursor-pointer" onClick={() => props.onDeleteDoc(document.id)}><BiTrash /></td>
+              <td className="py-2 px-4 pl-14 cursor-pointer" onClick={() => handleOpenModal(document)}><BiTrash /></td>
             </tr>
           ))}
         </tbody>
@@ -77,6 +90,18 @@ export const DocumentsTable = (props: DocumentsTableProps) => {
         total={props.totalPages}
         onPageChange={props.handlePageChange}
       />
+      {isModalOpen && selectedDocument && (
+        <ConfirmationModal
+          onConfirmDelete={
+            () => {
+              props.onDeleteDoc(selectedDocument.id)
+              setIsModalOpen(false)
+            }}
+          onCancel={handleCancelDelete}
+          entityName={"o documento"}
+          text={`${selectedDocument.tipo === 'declaracao' ? 'Declaração' : 'Histórico'} de ${selectedDocument.nome_aluno} - ${selectedDocument.matricula}`}
+        />
+      )}
     </div>
   );
 };

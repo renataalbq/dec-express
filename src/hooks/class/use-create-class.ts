@@ -25,7 +25,7 @@ function useCreateClass() {
 
       setIsLoading(false);
     } catch (error) {
-      console.log(error)
+      console.error("Erro capturado em useCreateClass:", error);
       setError('Error ao criar turma');
       setIsLoading(false);
     }

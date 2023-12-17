@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaCheckCircle } from "react-icons/fa";
 import { BiLoaderAlt } from "react-icons/bi";
+import { FaFileDownload } from "react-icons/fa";
+import { MdEmail } from "react-icons/md";
 
 interface ModalOptionsProps {
   onDownload: () => void;
@@ -47,14 +49,14 @@ const ModalOptions = (props: ModalOptionsProps) => {
             <p className="text-lg font-semibold mt-4 mb-4">Seu documento foi gerado com sucesso!</p>
             <div className="flex justify-center mt-10">
               <button onClick={props.onSendEmail}
-                className="mr-4 bg-gradient-to-r from-cyan-700 to-cyan-900 text-white px-4 py-2 rounded hover:from-cyan-900 hover:to-cyan-700"
+                className="flex mr-4 bg-gradient-to-r from-cyan-700 to-cyan-900 text-white px-4 py-2 rounded hover:from-cyan-900 hover:to-cyan-700"
               >
-                Enviar por email
+                Enviar por email <MdEmail className="ml-2 mt-1" />
               </button>
               <button onClick={props.onDownload}
-                className="bg-gradient-to-r from-sky-700 to-sky-900 text-white px-4 py-2 rounded hover:from-sky-900 hover:to-sky-700"
+                className="flex bg-gradient-to-r from-sky-700 to-sky-900 text-white px-4 py-2 rounded hover:from-sky-900 hover:to-sky-700"
               >
-                Download
+                Fazer download <FaFileDownload className="ml-2 mt-1" />
               </button>
             </div>
           </div>

@@ -37,7 +37,7 @@ const { login } = useAuth();
         setError('Falha no login. Verifique seu e-mail e senha.');
       }
     } catch (error) {
-      alert('Erro ao fazer login: ' + error);
+      setError('Erro ao fazer login. Tente novamente mais tarde.');
     }
   };
   

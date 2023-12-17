@@ -1,7 +1,7 @@
 import { BiError } from 'react-icons/bi';
 
 interface ErrorProps {
-    error: string
+    error: string | null
 }
 
 const ErrorPlaceholder = (props: ErrorProps) => {

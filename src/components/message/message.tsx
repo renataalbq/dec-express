@@ -1,6 +1,6 @@
 export interface AlertMessageProps {
-  type: MessageTypes;
-  message: string;
+  type: MessageTypes | null;
+  message: string | null;
 }
 
 export type MessageTypes = "error" | "success";

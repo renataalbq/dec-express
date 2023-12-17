@@ -4,6 +4,7 @@ import { AlertMessage, AlertMessageProps } from '@/components/message/message';
 import { ModalOptions } from '@/components/modal-options/modal-options';
 import useGetGrades from '@/hooks/grades/use-get-grades';
 import useGetStudentByEmail from '@/hooks/students/use-find-by-email';
+import { useServerAvailable } from '@/hooks/use-server-available';
 import { IDocuments } from '@/model/IDocuments';
 import { useAuth } from '@/store/auth.context';
 import { useState } from 'react';
@@ -16,6 +17,7 @@ export function RequestDocument() {
   const [alertMessage, setAlertMessage] = useState<AlertMessageProps>({ type: "success", message: "" });
   const [documentType, setDocumentType] = useState('');
   const {grades} = useGetGrades(student?.email || '');
+  const serverOn = useServerAvailable("http://localhost:3000/documents");
 
   const formatDate = (date: string | number | Date) => {
     let d = new Date(date),
@@ -153,8 +155,8 @@ export function RequestDocument() {
         <AlertMessage type={alertMessage.type} message={alertMessage.message} />
       )}
       <div className="flex space-x-4 mt-4">
-        <DocumentCard title={'Declaração Acadêmica'} nameButton={'Gerar Declaração'} onClickButton={() => createDocument('declaracao')} />
-        <DocumentCard title={'Histórico Acadêmico'} nameButton={'Gerar Histórico'} onClickButton={() => createDocument('historico')} />
+        <DocumentCard title={'Declaração Acadêmica'} nameButton={!serverOn ? 'Indisponível' : 'Gerar Declaração'} onClickButton={() => createDocument('declaracao')} disabled={!serverOn} />
+        <DocumentCard title={'Histórico Acadêmico'} nameButton={!serverOn ? 'Indisponível' : 'Gerar Histórico'} onClickButton={() => createDocument('historico')} disabled={!serverOn} />
         <DocumentCard title={'Boletim Bimestral'} nameButton={'Indisponível'} disabled />
       </div>
     </section>
