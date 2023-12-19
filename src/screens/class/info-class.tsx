@@ -18,7 +18,14 @@ export function InfoClass() {
     const { deleteClass, error } = useDeleteClass();
     const [searchTerm, setSearchTerm] = useState('');
     const [filteredStudents, setFilteredStudents] = useState(turma.listaAlunos);
-  
+    const ITEMS_PER_PAGE = 10;  
+    const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(filteredStudents.length / ITEMS_PER_PAGE);
+    const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+    const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+    const currentStudents = filteredStudents.slice(indexOfFirstItem, indexOfLastItem);
+
+
     const handleEditClass = (turma: any) => {
 		  navigate(`/register-class/${turma.codTurma}`, { state: { turma }});
 	  };
@@ -43,6 +50,10 @@ export function InfoClass() {
         return aluno.nome.toLowerCase().includes(term) || matriculaValida || cpfValido;
       });
       setFilteredStudents(studentsFilter);
+    };
+
+    const handlePageChange = (newPage: number) => {
+      setCurrentPage(newPage);
     };
   
     const handleTermChange = (e: { target: { value: SetStateAction<string>; }; }) => {
@@ -105,7 +116,7 @@ export function InfoClass() {
                 </tr>
               </thead>
               <tbody className="bg-gray-500 text-white text-center">
-                {filteredStudents.map((aluno: IAluno, index: number) => (
+                {currentStudents.map((aluno: IAluno, index: number) => (
                   <tr key={index}>
                     <td className="py-2 px-4">{toCapitalize(aluno.nome)}</td>
                     <td className="py-2 px-4">{aluno.dataNascimento}</td>
@@ -118,7 +129,11 @@ export function InfoClass() {
               </tbody>
             </table>
 
-            <Pagination current={1} total={5} onPageChange={() => {}} />
+            <Pagination
+              current={currentPage}
+              total={totalPages}
+              onPageChange={handlePageChange}
+            />
           </div>
     </Layout>
   );
