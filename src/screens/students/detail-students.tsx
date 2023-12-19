@@ -1,7 +1,7 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { FaTrashCan } from "react-icons/fa6";
 import { useState } from "react";
-import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
+import { ConfirmationModal } from "@/components/modals/modal-confirmation";
 import { Layout } from "@/components/layout";
 import useDeleteStudents from "@/hooks/students/use-delete-student";
 import { nivel_format } from "@/utils/nivel-formatter";

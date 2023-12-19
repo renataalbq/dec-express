@@ -26,11 +26,7 @@ export function StudentClass() {
 
   return (
     <Layout>
-      {!serverOn ? (
-          <ErrorPlaceholder error={"Servidor indisponível"} />
-        ) : isLoading || loadingEmail ? (
-          <LoadingPlaceholder />
-        ) :  student?.turma ?
+      {serverOn ?
         <>
           <div className="flex justify-between">
             <div>
@@ -70,8 +66,11 @@ export function StudentClass() {
               </tbody>
             </table>
           </div>
-        </> :
+        </> : isLoading || loadingEmail ? (
+          <LoadingPlaceholder />
+        ) :  student?.turma ?
         <NoClassPlaceholder />
+        : <ErrorPlaceholder error={"Servidor indisponível"} />
     }
     </Layout>
   );

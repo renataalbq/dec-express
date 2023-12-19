@@ -5,18 +5,28 @@ import { useAuth } from "@/store/auth.context";
 import LoadingFieldsPlaceholder from "@/components/placeholders/loading-field";
 import { useServerAvailable } from "@/hooks/use-server-available";
 import ErrorPlaceholder from "@/components/placeholders/error";
+import { nivel_format } from "@/utils/nivel-formatter";
+import { useState } from "react";
+import { ModalUpdatePassword } from "@/components/modals/modal-update-password";
 
 export function StudentProfile() {
   const { email } = useAuth();
   const { student: studentEmail } = useGetStudentByEmail(email);
   const { student } = useGetStudentByMatricula(studentEmail?.matricula || "");
   const serverOn = useServerAvailable("http://localhost:8080/decexpress/aluno");
+  const [modalOpen, setModalOpen] = useState<Boolean>()
+
+  const handleOpenModal = () => {
+    setModalOpen(true);
+  };
+  
+  const handleCancelDelete = () => {
+    setModalOpen(false);
+  };
 
   return (
     <Layout>
-      {!serverOn ? (
-        <ErrorPlaceholder error={"Servidor indisponível"} />
-      ) : (
+      {serverOn ? (
         <>
           <div className="flex justify-between">
             <div>
@@ -80,10 +90,8 @@ export function StudentProfile() {
                   </dt>
                   <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
                     {student?.endereco
-                      ? `${student?.endereco?.logradouro}, ${student?.endereco?.bairro},
-                ${student?.endereco?.numero} - ${student?.endereco?.municipio}/
-                ${student?.endereco?.uf}`
-                      : "-"}
+                      ? `${student?.endereco?.logradouro}, ${student?.endereco?.bairro}, ${student?.endereco?.numero} - ${student?.endereco?.municipio}/${student?.endereco?.uf}`
+                      : "Aluno sem endereço cadastrado"}
                   </dd>
                 </div>
                 <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
@@ -91,15 +99,29 @@ export function StudentProfile() {
                     Turma
                   </dt>
                   <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                    {student?.turma?.serie
-                      ? student?.turma?.serie
-                      : "Aluno sem vínculo com turma"}
-                  </dd>
+                {student?.turma ?
+                (`${student?.turma.serie}º Ano ${student?.turma.turma} - ${nivel_format(student?.turma.nivel)}`) : 'Aluno sem vínculo com turma'} 
+              </dd>
                 </div>
               </dl>
             </div>
+            <div className="mt-6">
+              <button
+                onClick={() => handleOpenModal()}
+                className="bg-gradient-to-r w-70  from-blue-500 to-blue-700 text-white px-4 py-2 rounded hover:from-blue-800 hover:to-blue-500"
+              >Alterar senha
+              </button>
+            </div>
+            {modalOpen && (
+              <ModalUpdatePassword
+              onCancel={handleCancelDelete}
+              emailUser={student ? student?.email : ''}
+            />
+            )}
           </div>
         </>
+      ) : (
+        <ErrorPlaceholder error={"Servidor indisponível"} />
       )}
     </Layout>
   );

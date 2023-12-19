@@ -1,7 +1,9 @@
 import { AlertMessage } from "@/components/message/message";
-import { ModalAlert } from "@/components/modal-alert/modal-alert";
+import { ModalAlert } from "@/components/modals/modal-alert";
 import useCreateStudent from "@/hooks/students/use-create-student";
+import useCreateUser from "@/hooks/students/use-create-user";
 import { date_format } from "@/utils/date-formatter";
+import { isValidEmail } from "@/utils/valid-form";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -16,22 +18,22 @@ export const SignUp = () => {
   const { createStudent, error } = useCreateStudent();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState('')
+  const { createUser } = useCreateUser();
 
-  const createUser = async () => {
+  const signUpUser = async () => {
     try {
+      if (!isValidEmail(userData.email)) {
+        setErrorMessage('Email Inválido')
+        return;
+      }
       const verifyEmail = await fetch(
         `http://localhost:8080/decexpress/aluno/verificar-email/${userData.email}`
       );
       if (verifyEmail.ok) {
-        const response = await fetch("http://localhost:3000/users", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(userData),
-        });
+        setErrorMessage('')
+        await createUser(userData)
 
-        if (response.ok) {
           if (userData.isAdmin === false) {
             const studentData = {
               nome: userData.name,
@@ -57,9 +59,6 @@ export const SignUp = () => {
         } else {
           setIsModalOpen(true);
         }
-      } else {
-        setIsModalOpen(true);
-      }
     } catch (error) {
       console.error(error);
     }
@@ -97,6 +96,9 @@ export const SignUp = () => {
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
       {successMessage && (
           <AlertMessage type="success" message={successMessage} />
+        )}
+      {errorMessage && (
+          <AlertMessage type="error" message={errorMessage} />
         )}
         {isModalOpen && (
           <ModalAlert
@@ -209,7 +211,7 @@ export const SignUp = () => {
         <div className="justify-between flex">
           <button
             type="submit"
-            onClick={createUser}
+            onClick={signUpUser}
             className="mt-12 flex rounded-md shadow-sm px-14 py-1.5 bg-gradient-to-r from-blue-500 to-blue-800 text-white  hover:from-blue-800 hover:to-blue-500"
           >
             Cadastrar

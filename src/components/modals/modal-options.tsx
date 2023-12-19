@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { AiOutlineClose } from "react-icons/ai";
 import { FaCheckCircle } from "react-icons/fa";
 import { BiLoaderAlt } from "react-icons/bi";
-import { FaFileDownload } from "react-icons/fa";
-import { MdEmail } from "react-icons/md";
 
 interface ModalOptionsProps {
   onDownload: () => void;
   onSendEmail: () => void;
   onCancel: () => void;
   loadingMessage: string;
+  text: string;
+  alert?: string;
 }
 
 const ModalOptions = (props: ModalOptionsProps) => {
@@ -46,17 +46,18 @@ const ModalOptions = (props: ModalOptionsProps) => {
         {showSuccess && (
           <div className="text-center">
             <FaCheckCircle className="text-green-500 mx-auto text-6xl"/>
-            <p className="text-lg font-semibold mt-4 mb-4">Seu documento foi gerado com sucesso!</p>
+            <p className="text-lg font-semibold mt-4 mb-4">{props.text}</p>
+            {props.alert && <p className="text-md font-normal mt-4 mb-4">{props.alert}</p>}
             <div className="flex justify-center mt-10">
               <button onClick={props.onSendEmail}
-                className="flex mr-4 bg-gradient-to-r from-cyan-700 to-cyan-900 text-white px-4 py-2 rounded hover:from-cyan-900 hover:to-cyan-700"
+                className="mr-4 bg-gradient-to-r from-cyan-700 to-cyan-900 text-white px-4 py-2 rounded hover:from-cyan-900 hover:to-cyan-700"
               >
-                Enviar por email <MdEmail className="ml-2 mt-1" />
+                Enviar por email 
               </button>
               <button onClick={props.onDownload}
-                className="flex bg-gradient-to-r from-sky-700 to-sky-900 text-white px-4 py-2 rounded hover:from-sky-900 hover:to-sky-700"
+                className="bg-gradient-to-r from-sky-700 to-sky-900 text-white px-4 py-2 rounded hover:from-sky-900 hover:to-sky-700"
               >
-                Fazer download <FaFileDownload className="ml-2 mt-1" />
+                Fazer download
               </button>
             </div>
           </div>

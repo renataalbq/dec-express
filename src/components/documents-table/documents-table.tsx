@@ -4,7 +4,7 @@ import { Pagination } from "../pagination/pagination";
 import { SetStateAction, useState } from "react";
 import { IDocuments } from "@/model/IDocuments";
 import { toCapitalize } from "@/utils/capitalize-formatter";
-import { ConfirmationModal } from "../modal-confirmation/modal-confirmation";
+import { ConfirmationModal } from "../modals/modal-confirmation";
 
 interface DocumentsTableProps {
   searchQuery: string;

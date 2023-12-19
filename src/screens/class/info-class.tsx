@@ -3,7 +3,7 @@ import { FaTrashCan } from "react-icons/fa6";
 import { BiSearch } from "react-icons/bi";
 import { Pagination } from "@/components/pagination/pagination";
 import { SetStateAction, useState } from "react";
-import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
+import { ConfirmationModal } from "@/components/modals/modal-confirmation";
 import { Layout } from "@/components/layout";
 import { nivel_format } from "@/utils/nivel-formatter";
 import useDeleteClass from "@/hooks/class/use-delete-class";

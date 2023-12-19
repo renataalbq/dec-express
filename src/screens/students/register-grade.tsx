@@ -1,6 +1,6 @@
 import { Layout } from "@/components/layout";
 import { AlertMessage, AlertMessageProps } from "@/components/message/message";
-import { ConfirmationModal } from "@/components/modal-confirmation/modal-confirmation";
+import { ConfirmationModal } from "@/components/modals/modal-confirmation";
 import { Pagination } from "@/components/pagination/pagination";
 import ErrorPlaceholder from "@/components/placeholders/error";
 import useCreateGrade from "@/hooks/grades/use-create-grade";
@@ -137,7 +137,6 @@ const RegisterGrade = () => {
     }
   
     const notaJaExiste = validarNotaExistente(grades, formularioAtual, idEdit, isUpdate);
-    console.log(notaJaExiste)
     if (notaJaExiste) {
       setAlertMessage({
         type: "error",
@@ -266,6 +265,7 @@ const RegisterGrade = () => {
                   onChange={handleFormChange}
                   className="p-2 border border-gray-300 rounded"
                   placeholder="Nota"
+                  step="0.01"
                   required
                 />
               </div>

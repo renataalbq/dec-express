@@ -32,9 +32,8 @@ export function RegisterClass() {
     }
   }, [turma]);
 
-  const isDuplicateClass = (ano: number, serie: number, nivel: string, turma: string) => {
+  const isDuplicateClass = (serie: number, nivel: string, turma: string) => {
     return classes?.some(classe => 
-      classe.ano === ano && 
       classe.serie === serie && 
       classe.nivel === nivel && 
       classe.turma === turma
@@ -74,7 +73,7 @@ export function RegisterClass() {
     }
     else {
       setErrorMessage(''); 
-      if (isDuplicateClass(formData.ano, formData.serie, formData.nivel, formData.turma)) {
+      if (isDuplicateClass(formData.serie, formData.nivel, formData.turma)) {
         setErrorMessage('Já existe uma turma com as mesmas características.');
         return;
       }

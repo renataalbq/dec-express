@@ -8,10 +8,13 @@ import { nivel_format } from "@/utils/nivel-formatter";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import useGetAllStudents from "@/hooks/students/use-get-students";
+import useCreateUser from "@/hooks/students/use-create-user";
+import { isValidCpf, isValidEmail, isValidPhone } from "@/utils/valid-form";
 
 export function RegisterStudent() {
   const navigate = useNavigate();
   const { createStudent, isLoading, error } = useCreateStudent();
+  const { createUser } = useCreateUser();
   const location = useLocation();
   const aluno = location?.state?.aluno;
   const {
@@ -77,7 +80,7 @@ export function RegisterStudent() {
 
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
+  
   const isDuplicateStudent = (cpf: string, rg: string, matricula: string, email: string) => {
     return students?.some(student => 
       student.cpf === cpf || 
@@ -119,10 +122,21 @@ export function RegisterStudent() {
       !formData.email
     ) {
       setErrorMessage("Preencha todos os campos obrigatórios.");
-    } else if (!formData.cpf || formData.cpf.length !== 11) {
+      return;
+    } 
+    if (!isValidEmail(formData.email)){
+      setErrorMessage("Email inválido.");
+      return;
+    }
+     if (!isValidCpf(formData.cpf)) {
       setErrorMessage("O CPF deve ter 11 dígitos.");
       return;
-    } else if (aluno) {
+    }
+    if (!isValidPhone(formData.telefone)) {
+      setErrorMessage("O Telefone deve ter entre 11 e 12 dígitos.");
+      return;
+    }
+     if (aluno) {
       setErrorMessage("");
       await updateStudent(aluno.matricula, formData);
       if (!isErrorUpdate) {
@@ -138,9 +152,16 @@ export function RegisterStudent() {
       } else {
         setErrorMessage("");
         await createStudent(formData);
+        const userData = {
+          name: formData.nome,
+          email: formData.email,
+          password: '12345',
+          isAdmin: false
+        }
+        await createUser(userData)
       }
       if (!error) {
-        setSuccessMessage("Aluno criado com sucesso");
+        setSuccessMessage("Aluno criado com sucesso. Senha padrão: 12345");
         setTimeout(() => {
           navigate("/list-students");
         }, 1000);
@@ -214,7 +235,7 @@ export function RegisterStudent() {
                 name="cpf"
                 value={formData.cpf}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500`}
                 placeholder="CPF"
                 required
               />
@@ -246,7 +267,7 @@ export function RegisterStudent() {
                 name="telefone"
                 value={formData.telefone}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500`}
                 placeholder="Telefone do aluno"
                 required
               />
@@ -261,7 +282,7 @@ export function RegisterStudent() {
                 name="email"
                 value={formData.email}
                 onChange={handleInputChange}
-                className="w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500"
+                className={`w-full px-4 py-2 border rounded focus:outline-none focus:border-blue-500`}
                 placeholder="Email"
                 required
               />

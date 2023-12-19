@@ -5,7 +5,6 @@ import { createBrowserRouter } from "react-router-dom";
 import { StudentProfile } from "@/screens/students/student-profile";
 import { StudentClass } from "@/screens/class/student-class";
 import { RequestDocument } from "@/screens/documents/request-document";
-import { EditProfile } from "@/screens/students/edit-profile";
 
 export const StudentRoutes = createBrowserRouter([
   {
@@ -19,10 +18,6 @@ export const StudentRoutes = createBrowserRouter([
   {
     path: "/student-class",
     element: <StudentClass />,
-  },
-  {
-    path: "/edit-profile/:alunoId",
-    element: <EditProfile />,
   },
   {
     path: "/request-document",

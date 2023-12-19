@@ -1,29 +1,29 @@
-import { IAluno } from '@/model/IAluno';
+import { IUsuario } from '@/model/IUsuario';
 import { useEffect, useState } from 'react';
 
 function useGetAllStudents() {
-  const [students, setStudents] = useState<IAluno[] | null>(null);
+  const [users, setUsers] = useState<IUsuario[] | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     setIsLoading(true);
 
-    fetch('http://localhost:8080/decexpress/aluno', {
+    fetch('http://localhost:3000/users', {
       method: 'GET',
     })
       .then((response) => response.json())
       .then((data) => {
-        setStudents(data);
+        setUsers(data);
         setIsLoading(false);
       })
       .catch(() => {
-        setError('Ocorreu um erro ao buscar alunos');
+        setError('Ocorreu um erro ao buscar usuarios');
         setIsLoading(false);
       });
   }, []);
 
-  return { students, isLoading, error };
+  return { users, isLoading, error };
 }
 
 export default useGetAllStudents;

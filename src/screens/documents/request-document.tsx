@@ -1,7 +1,7 @@
 import { DocumentCard } from '@/components/document-card/document-card';
 import { Layout } from '@/components/layout';
 import { AlertMessage, AlertMessageProps } from '@/components/message/message';
-import { ModalOptions } from '@/components/modal-options/modal-options';
+import { ModalOptions } from '@/components/modals/modal-options';
 import useGetGrades from '@/hooks/grades/use-get-grades';
 import useGetStudentByEmail from '@/hooks/students/use-find-by-email';
 import { useServerAvailable } from '@/hooks/use-server-available';
@@ -18,6 +18,8 @@ export function RequestDocument() {
   const [documentType, setDocumentType] = useState('');
   const {grades} = useGetGrades(student?.email || '');
   const serverOn = useServerAvailable("http://localhost:3000/documents");
+  const [hasGrades, setHasGrades] = useState<Boolean>(false)
+  const [loading, setLoading] = useState<Boolean>(false)
 
   const formatDate = (date: string | number | Date) => {
     let d = new Date(date),
@@ -48,7 +50,6 @@ export function RequestDocument() {
     const dataValidade = new Date(dataAtual);
     dataValidade.setMonth(dataValidade.getMonth() + 4);
     setDocumentType(type);
-    console.log(documentId)
 
     const requestBody: IDocuments = {
       data_solicitacao: formatDate(dataAtual), 
@@ -69,17 +70,25 @@ export function RequestDocument() {
         },
         body: JSON.stringify(requestBody),
       });
+      setLoading(true)
       const data = await response.json();
-      console.log(requestBody)
-
+      if (data.grade_ids.length === 0){
+        setHasGrades(false)
+      }
+      else {
+        setHasGrades(true)
+      }
       if (response.ok) {
-        console.log(data)
+        setLoading(false)
         setDocumentId(data.document.id);
         setTimeout(() => {
             handleOpenModal();
         }, 1000);
       } else {
         console.error("Erro ao criar documento:", data);
+        if (data.cpf){
+          setAlertMessage({type: "error", message: 'Aluno sem CPF. Entre em contato com a coordenação para ajuste no cadastro.'})
+        }
       }
     } catch (error) {
       console.error('Erro na requisição:', error);
@@ -89,10 +98,11 @@ export function RequestDocument() {
   const downloadPdf = () => {
     if (documentType === 'declaracao') {
       window.open(`http://localhost:3000/documents/${documentId}/download`, '_blank');
+      setAlertMessage({ type: "success", message: "Download iniciado com sucesso!" });
     } else {
-      window.open(`http://localhost:3000/documents/${documentId}/download_hist`, '_blank');
-    }
-    setAlertMessage({ type: "success", message: "Download iniciado com sucesso!" });
+        window.open(`http://localhost:3000/documents/${documentId}/download_hist`, '_blank');
+        setAlertMessage({ type: "success", message: "Download iniciado com sucesso!" });
+      }
     handleCloseModal();
   };
 
@@ -149,6 +159,8 @@ export function RequestDocument() {
           onCancel={handleCloseModal}
           onSendEmail={documentType === 'declaracao' ? sendEmail : sendEmailHist}
           loadingMessage={documentType === 'declaracao' ? 'Declaração' : 'Histórico'}
+          text={documentType === 'declaracao' ? 'Declaração gerada com sucesso!' : 'Histórico gerado com sucesso!'}
+          alert={!hasGrades ? 'Suas notas não foram carregadas, tente novamente ou prossiga assim se preferir.' : '' }
         />
       )}
     {alertMessage.message && (
@@ -156,7 +168,7 @@ export function RequestDocument() {
       )}
       <div className="flex space-x-4 mt-4">
         <DocumentCard title={'Declaração Acadêmica'} nameButton={!serverOn ? 'Indisponível' : 'Gerar Declaração'} onClickButton={() => createDocument('declaracao')} disabled={!serverOn} />
-        <DocumentCard title={'Histórico Acadêmico'} nameButton={!serverOn ? 'Indisponível' : 'Gerar Histórico'} onClickButton={() => createDocument('historico')} disabled={!serverOn} />
+        <DocumentCard title={'Histórico Acadêmico'} nameButton={!serverOn ? 'Indisponível' : loading ? 'Carregando' : 'Gerar Histórico'} onClickButton={() => createDocument('historico')} disabled={!serverOn} />
         <DocumentCard title={'Boletim Bimestral'} nameButton={'Indisponível'} disabled />
       </div>
     </section>
